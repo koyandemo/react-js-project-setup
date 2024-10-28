@@ -8,11 +8,11 @@ const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen pt-[10px] bg-[#EDECEE]">
+    <div className="flex w-full h-screen pt-[10px] bg-[#EDECEE]">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className=" flex flex-1 flex-col overflow-y-auto shreScrollBar">
+      <div className="w-full flex flex-1 flex-col overflow-y-auto shreScrollBar">
         <Header  sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main className="mx-auto px-[20px] pt-[28px]">
+        <main className="w-full mx-auto px-[20px] pt-[28px]">
           <Outlet />
         </main>
 
