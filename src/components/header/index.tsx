@@ -11,10 +11,13 @@ const Header = (props: {
   const generateTitle = () => {
     if (pathname === '/') {
       return 'Dashboard';
-    } else if (pathname.includes('feedback')) {
+    } else if (pathname.includes('feedbacks')) {
       return 'Feed Back';
     
-    } else {
+    }else if(pathname.includes("users")){
+      return 'User';
+    }
+    else {
       return '';
     }
   };

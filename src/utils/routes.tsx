@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
 import LoginPage from '../pages/auth/login';
-import FeedBack from '../pages/dashboard/feedback';
 import Home from '../pages/dashboard/home';
 import DashboardLayout from '../layouts/DashboardLayout';
 import AuthLayout from '../layouts/AuthLayout';
@@ -17,6 +16,8 @@ import {
   SubscriptionIcon,
   UserIcon,
 } from './appIcon';
+import FeedBackListPage from '../pages/dashboard/feedback';
+import UserListPage from '@/pages/dashboard/user';
 
 export const menuItems = [
   {
@@ -28,7 +29,7 @@ export const menuItems = [
   {
     icon: <FeedbackIcon />,
     label: 'Feedback',
-    route: '/feedback',
+    route: '/feedbacks',
     group: 'feedback',
   },
   {
@@ -93,8 +94,12 @@ const dashboardRoutes = [
     element: <Home />,
   },
   {
-    path: '/feedback',
-    element: <FeedBack />,
+    path: '/feedbacks',
+    element: <FeedBackListPage />,
+  },
+  {
+    path: '/users',
+    element: <UserListPage />,
   },
 ];
 

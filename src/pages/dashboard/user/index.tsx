@@ -12,17 +12,30 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { generateSizeForInput } from '@/lib/utils';
+import { ExportIcon } from '@/utils/appIcon';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
-const FeedBackListPage = () => {
+const UserListPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   return (
     <MainContainer background="#FFFFFF">
       <div className="w-full flex flex-col gap-[24px]">
+        <div className="self-end">
+          <ButtonCustom
+            isOutline={true}
+            type="button"
+            className="!rounded-[8px]"
+            size="lg"
+            callBack={() => {}}
+          >
+            <ExportIcon />
+            Export CSV
+          </ButtonCustom>
+        </div>
         <div className="w-full flex items-center gap-[24px]">
           <Input
             name="search"
@@ -37,6 +50,7 @@ const FeedBackListPage = () => {
           />
           <DropDownDefault label="Rating" size="full" callBack={() => {}} />
           <DateRangePicker
+            label="Joined Date"
             dateRange={dateRange}
             setDateRange={setDateRange}
             className={`${generateSizeForInput('full')}`}
@@ -91,4 +105,4 @@ const FeedBackListPage = () => {
   );
 };
 
-export default FeedBackListPage;
+export default UserListPage;

@@ -1,0 +1,53 @@
+.button-custom {
+    border: none;
+    outline: none;
+    background: #6d3df5;
+    border: 1px solid #6d3df5;
+    font-size: 16px;
+    line-height: 19.09px;
+    font-weight: 500;
+    color: white;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 49px;
+    cursor: pointer;
+  
+    &-disabled {
+      opacity: 50%;
+      border: none;
+    }
+  
+    &-not-allowed {
+      cursor: not-allowed;
+    }
+  
+    &-outline {
+      background-color: transparent;
+      border: 1px solid #B3B3B3;
+      color: #475569;
+    }
+    
+    &-sm {
+      width: 82.9px;
+      //height: 33px;
+    }
+  
+    &-md {
+      min-width: 121px;
+      //height: 51px;
+    }
+  
+    &-lg {
+      width: 171px;
+      //height: 56px;
+    }
+  
+    &-full {
+      width: 100%;
+      //height: 51px;
+    }
+  }
+  

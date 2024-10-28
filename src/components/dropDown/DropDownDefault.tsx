@@ -26,7 +26,7 @@ const DropDownDefault = ({
 }: Props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
-    <ClickOutSide onClick={() => setDropdownOpen(false)} className="relative">
+    <ClickOutSide onClick={() => setDropdownOpen(false)} className="w-full relative">
       <div
         onClick={() => {
           setDropdownOpen((prev) => !prev);
