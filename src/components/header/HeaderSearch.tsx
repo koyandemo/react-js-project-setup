@@ -10,6 +10,7 @@ export const HeaderSearch = () => {
   return (
     <div className="relative w-[339px] h-[61px] bg-[#FFFFFF80] backdrop-blur-[8px] rounded-[30px] px-[15px] flex justify-between items-center gap-4 z-[999]">
       <InputRef
+        icon="search"
         refObj={searchRef}
         classes="w-[214px] h-[41px] rounded-[49px]"
         callBack={debounceSearch}
