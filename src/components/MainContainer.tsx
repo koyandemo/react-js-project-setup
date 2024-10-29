@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 
 export default function MainContainer({
   background = '#F8F8F8BF',

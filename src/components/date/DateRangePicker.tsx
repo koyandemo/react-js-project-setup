@@ -10,9 +10,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
+import { cn } from '@/utils';
 
 type Props = {
   label?:string;

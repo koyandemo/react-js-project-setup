@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { generateSizeForInput } from '@/lib/utils';
+import { generateSizeForInput } from '@/utils';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -27,11 +27,11 @@ const FeedBackListPage = () => {
           <Input
             name="search"
             type="string"
-            size="full"
+            sizer="full"
             placeholder="Search Name,Email,etc..."
             value=""
             className="pl-[35px]"
-            callBack={(e) => {
+            onClick={(e) => {
               console.log(e);
             }}
           />

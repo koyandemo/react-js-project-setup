@@ -16,6 +16,8 @@ const Header = (props: {
     
     }else if(pathname.includes("users")){
       return 'User';
+    }else if(pathname.includes("subscriptions")){
+      return "Subscription"
     }
     else {
       return '';

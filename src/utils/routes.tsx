@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import LoginPage from '../pages/auth/login';
+import LoginPage from '../pages/auth/sign-in';
 import Home from '../pages/dashboard/home';
 import DashboardLayout from '../layouts/DashboardLayout';
 import AuthLayout from '../layouts/AuthLayout';
@@ -18,6 +18,7 @@ import {
 } from './appIcon';
 import FeedBackListPage from '../pages/dashboard/feedback';
 import UserListPage from '@/pages/dashboard/user';
+import SubscriptionListPage from '@/pages/dashboard/subscription';
 
 export const menuItems = [
   {
@@ -47,7 +48,7 @@ export const menuItems = [
   {
     icon: <SubscriptionIcon />,
     label: 'Subscription',
-    route: '/subscription',
+    route: '/subscriptions',
     group: 'subscription',
   },
   {
@@ -101,11 +102,15 @@ const dashboardRoutes = [
     path: '/users',
     element: <UserListPage />,
   },
+  {
+    path: '/subscriptions',
+    element: <SubscriptionListPage />,
+  },
 ];
 
 const authRoutes = [
   {
-    path: '/login',
+    path: '/sign-in',
     element: <LoginPage />,
   },
 ];
@@ -116,5 +121,5 @@ export const browserRouter = createBrowserRouter([
     element: <DashboardLayout />,
     children: dashboardRoutes,
   },
-  { path: '/login', element: <AuthLayout />, children: authRoutes },
+  { path: '/sign-in', element: <AuthLayout />, children: authRoutes },
 ]);

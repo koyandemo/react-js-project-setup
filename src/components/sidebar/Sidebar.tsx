@@ -5,6 +5,7 @@ import ClickOutSide from "../ClickOutSide";
 import { menuItems } from "../../utils/routes";
 import SidebarItem from "./SidebarItem";
 import { useState } from "react";
+import SidebarLogoutItem from "./SidebarLogoutItem";
 
 
 interface SidebarProps {
@@ -67,6 +68,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </ul>
             </nav>
           </div>
+        </div>
+        <div>
+        <SidebarLogoutItem />
         </div>
       </aside>
     </ClickOutSide>

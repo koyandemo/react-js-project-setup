@@ -12,13 +12,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { generateSizeForInput } from '@/utils';
-import { ExportIcon } from '@/utils/appIcon';
+import { AddIcon} from '@/utils/appIcon';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
-const UserListPage = () => {
+const SubscriptionListPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   return (
@@ -28,12 +28,12 @@ const UserListPage = () => {
           <ButtonCustom
             isOutline={true}
             type="button"
-            className="!rounded-[8px]"
-            size="lg"
+            className="!rounded-[8px] px-[32px]"
+            size="full"
             callBack={() => {}}
           >
-            <ExportIcon />
-            Export CSV
+            <AddIcon />
+            Add New Subscription
           </ButtonCustom>
         </div>
         <div className="w-full flex items-center gap-[24px]">
@@ -105,4 +105,4 @@ const UserListPage = () => {
   );
 };
 
-export default UserListPage;
+export default SubscriptionListPage;

@@ -1,6 +1,7 @@
-import clsx from 'clsx';
-import { ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from 'clsx';
+
+export const passwordHint = '**********';
 
 export function classNames(...classes: string[] | Object[]) {
   return classes.filter(Boolean).join(' ');
@@ -19,4 +20,13 @@ export const debounce = (fn: Function, delay: number) => {
       fn();
     }, delay);
   };
+};
+
+
+export const generateSizeForInput = (size: 'sm' | 'lg' | 'full') => {
+  return size === 'sm'
+    ? 'w-[137px] h-[32px]'
+    : size === 'lg'
+    ? 'w-[233px] h-[49px]'
+    : 'w-full h-[49px]';
 };

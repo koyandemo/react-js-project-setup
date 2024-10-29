@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Text from '../typography/Text';
 import ClickOutSide from '../ClickOutSide';
 import { DownIcon, UpIcon } from '@/utils/appIcon';
-import { generateSizeForInput } from '@/lib/utils';
+import { generateSizeForInput } from '@/utils';
 
 type dataT = {
     name:string;

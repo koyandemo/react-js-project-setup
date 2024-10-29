@@ -2,9 +2,11 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from '../components/sidebar/Sidebar'
 import { useState } from 'react';
 import Header from '../components/header';
+import useDialogStore from '@/store/useDialogStore';
+import LogoutDialog from '@/components/dialog/LogoutDialog';
 
 const DashboardLayout = () => {
-
+  const {type} = useDialogStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -17,6 +19,7 @@ const DashboardLayout = () => {
         </main>
 
         <div className="flex h-screen overflow-hidden">
+          {type === "logoutDialog" && <LogoutDialog />}
         </div>
       </div>
     </div>
