@@ -6,7 +6,6 @@ import MainContainer from '@/components/MainContainer';
 import Text from '@/components/typography/Text';
 import {
   Table,
-  TableBody,
   TableCell,
   TableHead,
   TableHeader,
