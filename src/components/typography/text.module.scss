@@ -1,0 +1,129 @@
+.text {
+    line-height: normal;
+    font-style: normal;
+    margin: unset;
+    padding: unset;
+    line-height: normal;
+    font-style: normal;
+    margin: unset;
+    padding: unset;
+    letter-spacing: 0px;
+  
+    &-letter-spacing {
+      letter-spacing: 1px;
+    }
+  
+    &-primary {
+      color: #6d3df5 !important;
+  
+      &-white {
+        color: #707eae;
+      }
+    }
+  
+    &-gray {
+      color: #6b7280;
+    }
+  
+    &-white {
+      color: #ffffff;
+    }
+  
+    &-breakline {
+      text-decoration: line-through;
+      color: #7e7e7e !important;
+    }
+  
+    &-underline {
+      text-decoration: underline;
+      color: black !important;
+    }
+  
+    &-underlinePrimary {
+      text-decoration: underline;
+      // color: #155fce !important;
+    }
+  
+    &-center {
+      text-align: center;
+    }
+  
+    &-xs {
+      font-size: 12px !important;
+      line-height: 14.32px !important;
+    }
+  
+    &-sm {
+      font-size: 14px !important;
+      line-height: 16.71px !important;
+    }
+  
+    &-md {
+      font-size: 16px;
+      line-height: 19.09px !important;
+    }
+  
+    &-lg {
+      font-size: 20px !important;
+      line-height: 36px !important;
+    }
+  
+    &-xl {
+      font-size: 28px !important;
+      line-height: 42px !important;
+    }
+  
+    &-2xl {
+      font-size: 32px !important;
+      line-height: 42px !important;
+    }
+  
+    &-thin {
+      font-weight: 100 !important;
+    }
+  
+    &-normal {
+      font-weight: 400 !important;
+    }
+  
+    &-medium {
+      font-weight: 500 !important;
+    }
+  
+    &-bold {
+      font-weight: 600 !important;
+    }
+  
+    &-capitalize {
+      text-transform: capitalize;
+    }
+  
+    &-uppercase {
+      text-transform: uppercase;
+    }
+  
+    &-lowercase {
+      text-transform: lowercase;
+    }
+  
+    &-none {
+      text-transform: none;
+    }
+  
+    &-pointer {
+      cursor: pointer;
+    }
+  
+    &-bgHover:hover {
+      background-color: rgba(0, 166, 255, 0.362);
+    }
+  
+    &-text {
+      cursor: text;
+    }
+  
+    &-not-allowed {
+      cursor: not-allowed;
+    }
+  }
+  
