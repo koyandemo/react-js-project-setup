@@ -11,6 +11,7 @@ type dataT = {
 
 type Props = {
   size: 'sm' | 'lg' | 'full';
+  labelTitle?:string;
   label:string;
   data?:dataT[] | null;
   selectedData?:dataT  | null;
@@ -19,6 +20,7 @@ type Props = {
 
 const DropDownDefault = ({
   size,
+  labelTitle = "",
   label,
   data,
   selectedData,
@@ -27,6 +29,18 @@ const DropDownDefault = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
     <ClickOutSide onClick={() => setDropdownOpen(false)} className="w-full relative">
+      <div className='flex flex-col gap-[0.5em]'>
+      {labelTitle && (
+          <label className="flex flex-col gap-[0.5em]">
+            <Text
+              label={labelTitle}
+              size="sm"
+              weight="medium"
+              isPrimary={false}
+              transform="capitalize"
+            />
+          </label>
+        )}
       <div
         onClick={() => {
           setDropdownOpen((prev) => !prev);
@@ -62,6 +76,7 @@ const DropDownDefault = ({
           </ul>
         </div>
       )}
+      </div>
     </ClickOutSide>
   );
 };

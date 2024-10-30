@@ -33,9 +33,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [iType, setIType] = useState(type);
     return (
-      <div className="relative  w-[inherit]">
+      <div className="relative flex flex-col gap-[0.5em] w-[inherit]">
         {label && (
-          <label className="block mb-2">
+          <label className="block">
             <Text
               label={label}
               size="sm"

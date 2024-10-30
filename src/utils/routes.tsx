@@ -19,6 +19,14 @@ import {
 import FeedBackListPage from '../pages/dashboard/feedback';
 import UserListPage from '@/pages/dashboard/user';
 import SubscriptionListPage from '@/pages/dashboard/subscription';
+import ContentLibraryListPage from '@/pages/dashboard/contentLibrary';
+import ContentLibraryCreatePage from '@/pages/dashboard/contentLibrary/new/page';
+import FeatureListPage from '@/pages/dashboard/feature';
+import AgentListPage from '@/pages/dashboard/agent';
+import CategoryListPage from '@/pages/dashboard/category';
+import ProductListPage from '@/pages/dashboard/product';
+import OrderListPage from '@/pages/dashboard/order';
+import ReceiveListPage from '@/pages/dashboard/receive';
 
 export const menuItems = [
   {
@@ -105,6 +113,38 @@ const dashboardRoutes = [
   {
     path: '/subscriptions',
     element: <SubscriptionListPage />,
+  },
+  {
+    path: '/content-library',
+    element: <ContentLibraryListPage />,
+  },
+  {
+    path: '/content-library/new',
+    element: <ContentLibraryCreatePage />,
+  },
+  {
+    path: '/features',
+    element: <FeatureListPage />,
+  },
+  {
+    path: '/agent',
+    element: <AgentListPage />,
+  },
+  {
+    path: '/category',
+    element: <CategoryListPage />,
+  },
+  {
+    path: '/product',
+    element: <ProductListPage />,
+  },
+  {
+    path: '/order',
+    element: <OrderListPage />,
+  },
+  {
+    path: '/receive',
+    element: <ReceiveListPage />,
   },
 ];
 

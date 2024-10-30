@@ -41,7 +41,7 @@ const ButtonCustom = ({
   return (
       <button
         form={formTarget}
-        className={cn(cssNames(),'text-[#475569] text-[16px]  font-[500]',className)}
+        className={cn(cssNames(),'text-[16px]  font-[500]',className)}
         disabled={disabled}
         onClick={() => {
           if (callBack) {

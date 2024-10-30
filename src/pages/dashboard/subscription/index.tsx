@@ -88,16 +88,7 @@ const SubscriptionListPage = () => {
                 <TableCell className="font-medium">{'Hello'}</TableCell>
               </TableRow>
             </TableBody>
-            <TableBody className="w-[inherit]">
-              <TableRow className="bg-[#F3F4F7] rounded-full overflow-hidden cursor-pointer">
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-              </TableRow>
-            </TableBody>
+            {/* bg-[#F3F4F7] */}
           </Table>
         </div>
       </div>

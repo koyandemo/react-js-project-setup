@@ -2,6 +2,7 @@ import ButtonCustom from '@/button/ButtonCustom';
 import { DateRangePicker } from '@/components/date/DateRangePicker';
 import DropDownDefault from '@/components/dropDown/DropDownDefault';
 import Input from '@/components/input/Input';
+import ToggleChecked from '@/components/input/ToggleChecked';
 import MainContainer from '@/components/MainContainer';
 import Text from '@/components/typography/Text';
 import {
@@ -13,14 +14,15 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn, generateSizeForInput } from '@/utils';
-import { EditIcon, ExportIcon } from '@/utils/appIcon';
-import { EyeIcon } from 'lucide-react';
+import { AddIcon, EyeIcon, RemoveIcon} from '@/utils/appIcon';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { useNavigate } from 'react-router-dom';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
-const UserListPage = () => {
+const ContentLibraryListPage = () => {
+    const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   const renderTableData = (idx: number) => {
@@ -33,27 +35,22 @@ const UserListPage = () => {
       >
         <TableCell className="font-medium">
           <Text
-            label={'000001351'}
-            size="sm"
-            weight="bold"
-            className="text-[#6D3DF5]"
-          />
-        </TableCell>
-        <TableCell className='font-medium'>
-        <Text
-            label={'Chandler Bing'}
-            size="sm"
-            weight="bold"
-            className="text-[#6D3DF5]"
-          />
-        </TableCell>
-        <TableCell className="font-medium">
-          <Text
-            label={'chandler@gmail.com'}
+            label={'Youtube'}
             size="sm"
             weight="medium"
             className="text-[#475569]"
           />
+        </TableCell>
+        <TableCell className="font-medium">
+          <Text
+            label={'Social'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className="font-medium">
+          <ToggleChecked checked={false} callBack={() => {}} />
         </TableCell>
         <TableCell className="font-medium">
           <Text
@@ -62,6 +59,9 @@ const UserListPage = () => {
             weight="medium"
             className="text-[#475569]"
           />
+        </TableCell>
+        <TableCell className="font-medium">
+          <img  src='/youtube-icon.png' width={40} height={40} />
         </TableCell>
         <TableCell className="font-medium">
           <div className="w-[75px] h-[33px] flex justify-center items-center  p-[8px] rounded-[8px] bg-[#CCF0EB]">
@@ -83,8 +83,8 @@ const UserListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center gap-[8px]">
-            <EditIcon />
             <EyeIcon />
+            <RemoveIcon />
           </div>
         </TableCell>
       </TableRow>
@@ -94,18 +94,20 @@ const UserListPage = () => {
   return (
     <MainContainer background="#FFFFFF">
       <div className="w-full flex flex-col gap-[24px]">
-        <div className="self-end">
+      <div className="self-end">
           <ButtonCustom
             isOutline={true}
             type="button"
             className="!rounded-[8px]"
             size="lg"
-            callBack={() => {}}
+            callBack={() => {
+                navigate("/content-library/new")
+            }}
           >
-            <ExportIcon />
-            Export CSV
+            <AddIcon />
+            Add New Icon
           </ButtonCustom>
-        </div>
+        </div>  
         <div className="w-full flex items-center gap-[24px]">
           <Input
             name="search"
@@ -118,14 +120,15 @@ const UserListPage = () => {
               console.log(e);
             }}
           />
-          <DropDownDefault label="Rating" size="full" callBack={() => {}} />
           <DateRangePicker
-            label="Joined Date"
+            label="Created Date"
             dateRange={dateRange}
             setDateRange={setDateRange}
             className={`${generateSizeForInput('full')}`}
           />
-          <DropDownDefault label="User Type" size="full" callBack={() => {}} />
+          <DropDownDefault label="Category" size="full" callBack={() => {}} />
+          <DropDownDefault label="Type" size="full" callBack={() => {}} />
+          <DropDownDefault label="Status" size="full" callBack={() => {}} />
           <ButtonCustom
             isOutline={true}
             type="button"
@@ -140,12 +143,13 @@ const UserListPage = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-white h-[17px] rounded-full">
-                <TableHead className={`${tHeadCn} `}>Id Number</TableHead>
-                <TableHead className={`${tHeadCn}`}>Name</TableHead>
-                <TableHead className={`${tHeadCn}`}>Email Address</TableHead>
-                <TableHead className={`${tHeadCn}`}>User Type</TableHead>
+                <TableHead className={`${tHeadCn} `}>Name</TableHead>
+                <TableHead className={`${tHeadCn}`}>Category</TableHead>
+                <TableHead className={`${tHeadCn}`}>Recommended</TableHead>
+                <TableHead className={`${tHeadCn}`}>Type</TableHead>
+                <TableHead className={`${tHeadCn}`}>Image</TableHead>
                 <TableHead className={`${tHeadCn}`}>Status</TableHead>
-                <TableHead className={`${tHeadCn}`}>Joined Date</TableHead>
+                <TableHead className={`${tHeadCn}`}>Created Date</TableHead>
                 <TableHead className={`${tHeadCn}`}>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -153,6 +157,7 @@ const UserListPage = () => {
               {renderTableData(0)}
               {renderTableData(1)}
               {renderTableData(2)}
+              {renderTableData(3)}
             </TableBody>
           </Table>
         </div>
@@ -161,4 +166,4 @@ const UserListPage = () => {
   );
 };
 
-export default UserListPage;
+export default ContentLibraryListPage;
