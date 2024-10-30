@@ -3,6 +3,7 @@ import { DateRangePicker } from '@/components/date/DateRangePicker';
 import DropDownDefault from '@/components/dropDown/DropDownDefault';
 import Input from '@/components/input/Input';
 import MainContainer from '@/components/MainContainer';
+import Text from '@/components/typography/Text';
 import {
   Table,
   TableBody,
@@ -11,8 +12,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { generateSizeForInput } from '@/utils';
-import { AddIcon} from '@/utils/appIcon';
+import { cn, generateSizeForInput } from '@/utils';
+import { AddIcon, RemoveIcon} from '@/utils/appIcon';
+import { EditIcon } from 'lucide-react';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -20,6 +22,82 @@ const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
 const SubscriptionListPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
+  const renderTableData = (idx: number) => {
+    return (
+      <TableRow
+        className={cn(
+          `rounded-full overflow-hidden cursor-pointer`,
+          `${idx % 2 ? 'bg-[#F3F4F7]' : 'bg-[#FFFFFF80]'}`
+        )}
+      >
+        <TableCell className="font-medium">
+          <Text
+            label={'SHRE Free'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className='font-medium'>
+        <Text
+            label={'0'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className="font-medium">
+          <Text
+            label={'0'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className="font-medium">
+          <Text
+            label={'$57.88'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className="font-medium">
+          <Text
+            label={'68298'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className="font-medium">
+          <div className="w-[75px] h-[33px] flex justify-center items-center  p-[8px] rounded-[8px] bg-[#CCF0EB]">
+            <Text
+              label="Active"
+              size="sm"
+              weight="medium"
+              className="text-[#00B69B]"
+            />
+          </div>
+        </TableCell>
+        <TableCell className="font-medium">
+          <Text
+            label={'2024-07-24'}
+            size="sm"
+            weight="medium"
+            className="text-[#475569]"
+          />
+        </TableCell>
+        <TableCell className="font-medium">
+          <div className="flex items-center gap-[8px]">
+            <EditIcon />
+            <RemoveIcon />
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  };
 
   return (
     <MainContainer background="#FFFFFF">
@@ -71,24 +149,18 @@ const SubscriptionListPage = () => {
             <TableHeader>
               <TableRow className="bg-white h-[17px] rounded-full">
                 <TableHead className={`${tHeadCn} `}>Name</TableHead>
-                <TableHead className={`${tHeadCn}`}>User Type</TableHead>
-                <TableHead className={`${tHeadCn}`}>Rating</TableHead>
-                <TableHead className={`${tHeadCn}`}>Reviews</TableHead>
-                <TableHead className={`${tHeadCn}`}>Feedback Date</TableHead>
+                <TableHead className={`${tHeadCn}`}>Monthly Price</TableHead>
+                <TableHead className={`${tHeadCn}`}>6 Months Price</TableHead>
+                <TableHead className={`${tHeadCn}`}>1 Year Price</TableHead>
+                <TableHead className={`${tHeadCn}`}>Total Subscribers</TableHead>
+                <TableHead className={`${tHeadCn}`}>Status</TableHead>
+                <TableHead className={`${tHeadCn}`}>Created Date</TableHead>
                 <TableHead className={`${tHeadCn}`}>Action</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="w-[inherit]">
-              <TableRow className="bg-[#FFFFFF80] rounded-full overflow-hidden cursor-pointer">
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-                <TableCell className="font-medium">{'Hello'}</TableCell>
-              </TableRow>
-            </TableBody>
-            {/* bg-[#F3F4F7] */}
+            {renderTableData(0)}
+            {renderTableData(1)}
+            {renderTableData(2)}
           </Table>
         </div>
       </div>
