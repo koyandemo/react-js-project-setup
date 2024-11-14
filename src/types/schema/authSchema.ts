@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+export type LoginUserT = {
+  email:string;
+  password:string;
+}
+
 export const SignInSchema = z.object({
   email: z
     .string()

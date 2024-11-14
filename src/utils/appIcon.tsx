@@ -306,14 +306,15 @@ export const DownIcon = ({ width = 14, height = 8 }: IconProps) => {
   );
 };
 
-export const UpIcon = ({ width = 14, height = 8 }: IconProps) => {
+export const UpIcon = (props: React.SVGAttributes<{}>) => {
   return (
     <svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
+      width={14}
+      height={8}
+      viewBox={`0 0 14 8`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <path
         d="M7.00035 2.8286L2.05055 7.77832L0.636349 6.36411L7.00035 0.000100136L13.3643 6.36411L11.95 7.77832L7.00035 2.8286Z"
@@ -519,7 +520,6 @@ export const EditIcon = () => {
   );
 };
 
-
 export const LeftIcon = ({ width = 8, height = 12 }: IconProps) => {
   return (
     <svg
@@ -537,7 +537,11 @@ export const LeftIcon = ({ width = 8, height = 12 }: IconProps) => {
   );
 };
 
-export const FileUploadIcon = ({ color = 'text-gray-500' }: { color?: string }) => {
+export const FileUploadIcon = ({
+  color = 'text-gray-500',
+}: {
+  color?: string;
+}) => {
   return (
     <svg
       className={`w-8 h-8 mb-4 ${color}`}
@@ -553,6 +557,72 @@ export const FileUploadIcon = ({ color = 'text-gray-500' }: { color?: string }) 
         strokeWidth="2"
         d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
       />
+    </svg>
+  );
+};
+
+export const UpArrowIcon = (props: React.SVGAttributes<{}>) => {
+  return (
+    <svg
+      width="19"
+      height="19"
+      viewBox="0 0 19 19"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8.9823 6.37L4.95805 10.3942L3.89722 9.33342L9.73253 3.49811L15.5678 9.33342L14.507 10.3942L10.4828 6.37L10.4828 15.5018L8.9823 15.5018L8.9823 6.37Z"
+        fill="#008844"
+      />
+    </svg>
+  );
+};
+
+
+export const LoadingIcon = ({ width = 48, height = 48 }: IconProps) => {
+  return (
+    <svg
+      className="animate-spin text-gray-900/20"
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+    >
+      <path
+        d="M32 3C35.8083 3 39.5794 3.75011 43.0978 5.20749C46.6163 6.66488 49.8132 8.80101 52.5061 11.4939C55.199 14.1868 57.3351 17.3837 58.7925 20.9022C60.2499 24.4206 61 28.1917 61 32C61 35.8083 60.2499 39.5794 58.7925 43.0978C57.3351 46.6163 55.199 49.8132 52.5061 52.5061C49.8132 55.199 46.6163 57.3351 43.0978 58.7925C39.5794 60.2499 35.8083 61 32 61C28.1917 61 24.4206 60.2499 20.9022 58.7925C17.3837 57.3351 14.1868 55.199 11.4939 52.5061C8.801 49.8132 6.66487 46.6163 5.20749 43.0978C3.7501 39.5794 3 35.8083 3 32C3 28.1917 3.75011 24.4206 5.2075 20.9022C6.66489 17.3837 8.80101 14.1868 11.4939 11.4939C14.1868 8.80099 17.3838 6.66487 20.9022 5.20749C24.4206 3.7501 28.1917 3 32 3L32 3Z"
+        stroke="currentColor"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></path>
+      <path
+        d="M32 3C36.5778 3 41.0906 4.08374 45.1692 6.16256C49.2477 8.24138 52.7762 11.2562 55.466 14.9605C58.1558 18.6647 59.9304 22.9531 60.6448 27.4748C61.3591 31.9965 60.9928 36.6232 59.5759 40.9762"
+        stroke="currentColor"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-primary"
+      ></path>
+    </svg>
+  );
+};
+
+
+export const NoMoreData = ({ width = 20, height = 20 }: IconProps) => {
+  return (
+    <svg
+      stroke="currentColor"
+      fill="currentColor"
+      strokeWidth="0"
+      viewBox="0 0 16 16"
+      height={width}
+      width={height}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"></path>
+      <path d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"></path>
     </svg>
   );
 };

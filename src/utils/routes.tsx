@@ -27,6 +27,7 @@ import CategoryListPage from '@/pages/dashboard/category';
 import ProductListPage from '@/pages/dashboard/product';
 import OrderListPage from '@/pages/dashboard/order';
 import ReceiveListPage from '@/pages/dashboard/receive';
+import SkuListPage from '@/pages/dashboard/sku';
 
 export const menuItems = [
   {
@@ -84,6 +85,12 @@ export const menuItems = [
     group: 'product',
   },
   {
+    icon: <ProductIcon />,
+    label: 'Sku',
+    route: '/sku',
+    group: 'sku',
+  },
+  {
     icon: <OrderIcon />,
     label: 'Order',
     route: '/order',
@@ -137,6 +144,10 @@ const dashboardRoutes = [
   {
     path: '/product',
     element: <ProductListPage />,
+  },
+  {
+    path: '/sku',
+    element: <SkuListPage />,
   },
   {
     path: '/order',

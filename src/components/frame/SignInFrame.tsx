@@ -7,9 +7,11 @@ import { SignInSchema } from '@/types/schema/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { passwordHint } from '@/utils';
 import { useNavigate } from 'react-router-dom';
+import { login } from '@/@api/authApi';
 
 const SignInFrame = () => {
   const navigate = useNavigate();
+  const [loading,setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const {
@@ -26,25 +28,16 @@ const SignInFrame = () => {
 
   const handleLogin = async (value: z.infer<typeof SignInSchema>) => {
     try {
-      console.log(value);
-      navigate("/")
-        // const res = await signIn('credentials', {
-        //   email: value.email,
-        //   password: value.password,
-        //   redirect: false,
-        // });
-        // if (res?.error) {
-        //   console.log(res?.error);
-        //   setErrorMessage('Incorrect email or password.');
-        //   setTimeout(() => {
-        //     setErrorMessage('');
-        //   }, 3000);
-        //   return;
-        // }
-        // if (!res?.error) {
-        //   router.push('/my-cards');
-        // }
-    } catch (err) {
+      setLoading(true);
+      const res = await login(value);
+      const token = res?.data?.data?.token;
+      if(res?.data?.data?.token){
+        setLoading(false);
+        localStorage.setItem("token",token)
+        navigate("/")
+      }
+      } catch (err) {
+      setLoading(false);
       setErrorMessage('Incorrect email or password.');
       setTimeout(() => {
         setErrorMessage('');
@@ -87,11 +80,11 @@ const SignInFrame = () => {
         </a> */}
       </div>
       {errorMessage && (
-        <span className="inline-block text-error text-xs">{errorMessage}</span>
+        <span className="inline-block text-red-500 text-xs">{errorMessage}</span>
       )}
       <div className="mt-8  flex flex-col w-full">
-        <ButtonCustom type="submit" size="full" className='text-white'>
-          Login
+        <ButtonCustom disabled={loading} type="submit" size="full" className='text-white'>
+          {loading ? "Loading ...":"Login"}
         </ButtonCustom>
       </div>
     </form>
