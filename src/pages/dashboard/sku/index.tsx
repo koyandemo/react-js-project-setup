@@ -16,19 +16,22 @@ import { cn } from '@/utils';
 import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
 import { EditIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import ReactPaginate from 'react-paginate';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
 const SkuListPage = () => {
+  const [total,setTotal] = useState(0);
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState(false);
   const [skuData, setSkuData] = useState<SkuT[]>([]);
   const [filterData] = useState<SkuFilterT>({
     orderBy: 'desc',
     sortKey: 'created_at',
-    productId:1,
+    productId: 1,
     limit: 10,
   });
- 
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -37,10 +40,10 @@ const SkuListPage = () => {
     try {
       setLoading(true);
       const res = await getSkus(1, filterData);
-      const data = res?.data?.data?.data;
-      console.log(res)
-      if (res?.data?.data?.data) {
-        setSkuData(data);
+      const data = res?.data?.data;
+      if (data) {
+        setSkuData(data?.data);
+        setTotal(data.meta.total)
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -51,7 +54,7 @@ const SkuListPage = () => {
     }
   };
 
-  const renderTableData = (idx: number,data:SkuT) => {
+  const renderTableData = (idx: number, data: SkuT) => {
     return (
       <TableRow
         className={cn(
@@ -85,13 +88,13 @@ const SkuListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <Text
-            label={data.description.slice(0,10)}
+            label={data.description.slice(0, 10)}
             size="sm"
             weight="medium"
             className="text-[#475569]"
           />
         </TableCell>
-         <TableCell className="font-medium">
+        <TableCell className="font-medium">
           <img src={data.image1} width={40} height={40} />
         </TableCell>
         <TableCell className="font-medium">
@@ -178,7 +181,10 @@ const SkuListPage = () => {
             </TableHeader>
             {loading && (
               <TableRow className="relative h-[450px]">
-                <TableCell colSpan={10} className="pt-[50px] font-medium w-full">
+                <TableCell
+                  colSpan={10}
+                  className="pt-[50px] font-medium w-full"
+                >
                   <div className="absolute left-[50%] translate-x-[-50%] translate-y-[-100%]">
                     <LoadingIcon />
                   </div>
@@ -187,22 +193,42 @@ const SkuListPage = () => {
             )}
             {!loading && skuData.length === 0 && (
               <TableRow className="bg-[#e8e6e646] h-[450px] border-b-[20px] border-[#f7f7f7]">
-                <TableCell colSpan={10} className="pt-5 text-center font-medium">
-                <span className="flex flex-col gap-3 justify-center items-center">
-                No More Data !
-                <NoMoreData width={30} height={30} />
-                </span>
+                <TableCell
+                  colSpan={10}
+                  className="pt-5 text-center font-medium"
+                >
+                  <span className="flex flex-col gap-3 justify-center items-center">
+                    No More Data !
+                    <NoMoreData width={30} height={30} />
+                  </span>
                 </TableCell>
               </TableRow>
             )}
 
             {!loading && skuData.length > 0 && (
-               <TableBody className="w-[inherit]">
-               {skuData?.map((contact,i) => renderTableData(i, contact))}
-             </TableBody>
+              <TableBody className="w-[inherit]">
+                {skuData?.map((contact, i) => renderTableData(i, contact))}
+              </TableBody>
             )}
           </Table>
         </div>
+        {skuData.length > 0 &&
+        <div className="w-full flex justify-center my-3">
+        <ReactPaginate
+          containerClassName={'pagination'}
+          pageClassName={'page-item'}
+          activeClassName={'active'}
+          forcePage={page - 1}
+          onPageChange={(event) => {
+            setPage(event.selected + 1);
+          }}
+          pageCount={total / 10}
+          breakLabel="..."
+          previousLabel={'<'}
+          nextLabel={'>'}
+        />
+      </div>
+        }
       </div>
     </MainContainer>
   );

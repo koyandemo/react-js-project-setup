@@ -13,27 +13,16 @@ export interface InputProps
   sizer?: 'sm' | 'lg' | 'full';
   className?: string;
   register?: UseFormRegisterReturn;
+  disabled?:boolean;
+  placeholder:string;
+  refObj?: React.RefObject<HTMLInputElement> | null;
+  onChange?:() => void;
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      label = '',
-      name,
-      error = '',
-      sizer = "lg",
-      disabled = false,
-      placeholder,
-      className = '',
-      type,
-      register,
-      ...props
-    },
-    ref
-  ) => {
+const Input = ({label,type,name,error,sizer="sm",className,register,disabled=false,placeholder,refObj,onChange}:InputProps) => {
     const [iType, setIType] = useState(type);
     return (
-      <div className="relative flex flex-col gap-[0.5em] w-[inherit]">
+      <div className="relative flex flex-col gap-[0.5em] w-full">
         {label && (
           <label className="block">
             <Text
@@ -46,18 +35,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
         <input
+        
           className={cn(
             'text-lead text-[14px] py-4 rounded-[8px] px-4 block w-full outline-none bg-white border border-[#B3B3B3] placeholder:text-[13px] disabled:bg-gray-200',
             generateSizeForInput(sizer),
             className
           )}
-          {...props}
-          
-          ref={ref}
+          {...register}
+          ref={refObj}
           disabled={disabled}
           type={iType}
           placeholder={placeholder}
-          {...register}
+          onChange={onChange}
         />
         {name === 'search' && (
           <div className="absolute top-[20px] left-[15px] cursor-pointer">
@@ -81,7 +70,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       </div>
     );
   }
-);
 
 export default Input;
 
