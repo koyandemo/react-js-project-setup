@@ -28,6 +28,10 @@ import ProductListPage from '@/pages/dashboard/product';
 import OrderListPage from '@/pages/dashboard/order';
 import ReceiveListPage from '@/pages/dashboard/receive';
 import SkuListPage from '@/pages/dashboard/sku';
+import ProductCreatePage from '@/pages/dashboard/product/new/page';
+import CategoryCreatePage from '@/pages/dashboard/category/new/page';
+import ProductEditPage from '@/pages/dashboard/product/edit/page';
+import CategoryEditPage from '@/pages/dashboard/category/edit/page';
 
 export const menuItems = [
   {
@@ -142,8 +146,24 @@ const dashboardRoutes = [
     element: <CategoryListPage />,
   },
   {
+    path : '/category/create',
+    element : <CategoryCreatePage />
+  },
+  {
+    path : '/category/edit/:id',
+    element : <CategoryEditPage />
+  },
+  {
     path: '/product',
     element: <ProductListPage />,
+  },
+  {
+    path: '/product/create',
+    element: <ProductCreatePage />,
+  },
+  {
+    path: '/product/edit/:id',
+    element: <ProductEditPage />,
   },
   {
     path: '/sku',

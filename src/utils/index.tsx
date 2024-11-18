@@ -1,5 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const passwordHint = '**********';
 
@@ -30,3 +32,85 @@ export const generateSizeForInput = (size: 'sm' | 'lg' | 'full') => {
     ? 'w-[233px] h-[49px]'
     : 'w-full h-[49px]';
 };
+
+
+export const readFile = (file: any) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => resolve(reader.result), false);
+    reader.readAsDataURL(file);
+  });
+};
+
+
+export const generateLeaseRequireMsg = (name: string, length: number) => {
+  return `${name} must be at lease ${length} characters!`;
+};
+
+export const generateGtMsg = (name:string,value:number) => {
+  return `${name} must be greater than ${value} !`;
+}
+
+export const limitTime = 3000;
+
+export type toastObjType = {
+  position: 'top-center';
+  autoClose: number;
+  hideProgressBar: boolean;
+  closeOnClick: boolean;
+  pauseOnHover: boolean;
+  draggable: boolean;
+  theme: string;
+};
+
+const toastObj: toastObjType = {
+  position: 'top-center',
+  autoClose: limitTime,
+  hideProgressBar: true,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: false,
+  theme: 'colored',
+};
+
+export const toastMessage = (
+  type: string,
+  message: string,
+  disabledClose?: boolean
+) => {
+  if (type === 'error') {
+    return toast.error(message, {
+      ...toastObj,
+      autoClose: disabledClose ? false : limitTime,
+    });
+  }
+  if (type === 'success') {
+    return toast.success(message, { ...toastObj });
+  }
+  if (type === 'warn') {
+    return toast.warn(message, { ...toastObj });
+  } else {
+    return null;
+  }
+};
+
+
+export default function getErrorMessage(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    // if (
+    //   error.response?.data?.data &&
+    //   Object.keys(error.response?.data?.data).length > 0
+    // ) {
+    //   const err = error.response.data.data;
+    //   const keys = Object.keys(err);
+    //   const firstKey = keys[0];
+    //   const firstError = err[firstKey];
+    //   return firstError[0];
+    // }
+
+    if (error.response?.data?.message) {
+      return error.response?.data.message;
+    } else return error.message;
+  } else if (error instanceof Error) return error.message;
+  else return 'Unexpected error. Try again later';
+}

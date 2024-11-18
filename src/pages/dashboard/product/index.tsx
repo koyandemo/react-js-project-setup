@@ -1,4 +1,4 @@
-import { getProducts } from '@/@api/productApi';
+import { deleteProduct, getProducts } from '@/@api/productApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import { Dropdown } from 'primereact/dropdown';
 import Input from '@/components/input/Input';
@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ProductFilterT, ProductT } from '@/types/product';
-import { cn, debounce } from '@/utils';
+import getErrorMessage, { cn, debounce, toastMessage } from '@/utils';
 import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
 import { EditIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -21,13 +21,16 @@ import ReactPaginate from 'react-paginate';
 import { orderByLists } from '@/utils/initData';
 import { CategoryT } from '@/types/category';
 import { getCategories } from '@/@api/categoryApi';
+import { useNavigate } from 'react-router-dom';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
 const ProductListPage = () => {
+  const navigate = useNavigate();
   const [total, setTotal] = useState(1);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState(false);
+  const [isFetchAgain,setIsFetchAgain] = useState(false);
   const searchNameRef = useRef<HTMLInputElement | null>(null);
   const [productsData, setProductsData] = useState<ProductT[]>([]);
   const [categoriesData, setCategoriesData] = useState<CategoryT[]>([]);
@@ -47,6 +50,12 @@ const ProductListPage = () => {
     fetchProducts();
   }, [page, filterData.name, filterData.categoryId, filterData.orderBy]);
 
+  useEffect(() => {
+    if(isFetchAgain){
+      fetchProducts();
+    }
+  },[isFetchAgain])
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -59,6 +68,7 @@ const ProductListPage = () => {
         setProductsData(data?.data);
         setTimeout(() => {
           setLoading(false);
+          setIsFetchAgain(false);
         }, 1000);
       }
     } catch (err) {
@@ -107,6 +117,23 @@ const ProductListPage = () => {
       searchNameRef.current.value = '';
     }
   };
+
+  const handleRemove = async (id:number) => {
+    const pass = confirm("Are you sure to delete !");
+    
+    if(pass){
+      try{
+      await deleteProduct(id);
+      toastMessage("success","Successfully Deleted !")
+       setIsFetchAgain(true);
+      }catch(err){
+        toastMessage("error",getErrorMessage(err))
+      }
+    }
+  }
+
+  
+  
 
   const debounceSearch = debounce(handleSearchName, 1000);
 
@@ -179,8 +206,14 @@ const ProductListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center gap-[8px]">
+            <div className='cursor-pointer' onClick={() => {
+              navigate(`/product/edit/${data.id}`)
+            }}>
             <EditIcon />
-            <RemoveIcon />
+            </div>
+           <div onClick={() => {handleRemove(data.id)}}>
+           <RemoveIcon />
+           </div>
           </div>
         </TableCell>
       </TableRow>
@@ -196,7 +229,9 @@ const ProductListPage = () => {
             type="button"
             className="!rounded-[8px] px-[32px]"
             size="full"
-            callBack={() => {}}
+            callBack={() => {
+              navigate("/product/create")
+            }}
           >
             <AddIcon />
             Add New Product
@@ -213,6 +248,7 @@ const ProductListPage = () => {
               value=""
               className="pl-[35px] w-full"
               onChange={debounceSearch}
+              showError={false}
             />
           </div>
           <div className="w-[20%]">
@@ -224,7 +260,7 @@ const ProductListPage = () => {
               options={categoriesData}
               optionLabel="name"
               optionValue="id"
-              placeholder="Select Category"
+              placeholder="Select Order"
               className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
             />
           </div>

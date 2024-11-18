@@ -1,4 +1,4 @@
-import { getCategories } from '@/@api/categoryApi';
+import { deleteCategory, getCategories } from '@/@api/categoryApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import MainContainer from '@/components/MainContainer';
 import Text from '@/components/typography/Text';
@@ -11,17 +11,20 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { CategoryFilterT, CategoryT } from '@/types/category';
-import { cn } from '@/utils';
+import getErrorMessage, { cn, toastMessage } from '@/utils';
 import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
 import { orderByLists } from '@/utils/initData';
 import { EditIcon } from 'lucide-react';
 import { Dropdown } from 'primereact/dropdown';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import { useNavigate } from 'react-router-dom';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
 const CategoryListPage = () => {
+  const navigate = useNavigate();
+  const [isFetchAgain,setIsFetchAgain] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -37,6 +40,12 @@ const CategoryListPage = () => {
     fetchCategoires();
   }, [page,filterData.orderBy]);
 
+  useEffect(() => {
+    if(isFetchAgain){
+      fetchCategoires();
+    }
+  },[isFetchAgain])
+
   const fetchCategoires = async () => {
     try {
       setLoading(true);
@@ -47,6 +56,7 @@ const CategoryListPage = () => {
         setTotal(data.meta.total);
         setTimeout(() => {
           setLoading(false);
+          setIsFetchAgain(false);
         }, 1000);
       }
     } catch (err) {
@@ -54,6 +64,20 @@ const CategoryListPage = () => {
       console.error(err);
     }
   };
+
+  const handleRemove = async (id:number) => {
+    const pass = confirm("Are you sure to delete !");
+    
+    if(pass){
+      try{
+      await deleteCategory(id);
+      toastMessage("success","Successfully Deleted !")
+       setIsFetchAgain(true);
+      }catch(err){
+        toastMessage("error",getErrorMessage(err))
+      }
+    }
+  }
 
   const renderTableData = (idx: number, data: CategoryT) => {
     return (
@@ -92,8 +116,12 @@ const CategoryListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center gap-[8px]">
+            <div onClick={() => {navigate(`/category/edit/${data.id}`)}}>
             <EditIcon />
+            </div>
+            <div onClick={() =>  {handleRemove(data.id)}}>
             <RemoveIcon />
+            </div>
           </div>
         </TableCell>
       </TableRow>
@@ -116,44 +144,16 @@ const CategoryListPage = () => {
           <ButtonCustom
             isOutline={true}
             type="button"
-            className="!rounded-[8px] px-[32px]"
+            className="!rounded-[8px] px-[32px] whitespace-nowrap"
             size="full"
-            callBack={() => {}}
+            callBack={() => {
+              navigate("/category/create")
+            }}
           >
             <AddIcon />
             Add New Category
           </ButtonCustom>
         </div>
-        {/* <div className="w-full flex items-center gap-[24px]">
-          <Input
-            name="search"
-            type="string"
-            sizer="full"
-            placeholder="Search Name,Email,etc..."
-            value=""
-            className="pl-[35px]"
-            onClick={(e) => {
-              console.log(e);
-            }}
-          />
-          <DropDownDefault label="Rating" size="full" callBack={() => {}} />
-          <DateRangePicker
-            label="Joined Date"
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-            className={`${generateSizeForInput('full')}`}
-          />
-          <DropDownDefault label="User Type" size="full" callBack={() => {}} />
-          <ButtonCustom
-            isOutline={true}
-            type="button"
-            className="!rounded-[8px]"
-            size="full"
-            callBack={() => {}}
-          >
-            Reset Filter
-          </ButtonCustom>
-        </div> */}
         <div>
           <Table>
             <TableHeader>

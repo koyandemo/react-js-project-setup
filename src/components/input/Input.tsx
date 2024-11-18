@@ -10,6 +10,7 @@ export interface InputProps
   type: string;
   name: string;
   error?: string;
+  showError?:boolean;
   sizer?: 'sm' | 'lg' | 'full';
   className?: string;
   register?: UseFormRegisterReturn;
@@ -19,12 +20,11 @@ export interface InputProps
   onChange?:() => void;
 }
 
-const Input = ({label,type,name,error,sizer="sm",className,register,disabled=false,placeholder,refObj,onChange}:InputProps) => {
+const Input = ({label,type,name,error,sizer="sm",showError=true,className,register,disabled=false,placeholder,refObj,onChange}:InputProps) => {
     const [iType, setIType] = useState(type);
     return (
       <div className="relative flex flex-col gap-[0.5em] w-full">
         {label && (
-          <label className="block">
             <Text
               label={label}
               size="sm"
@@ -32,7 +32,6 @@ const Input = ({label,type,name,error,sizer="sm",className,register,disabled=fal
               isPrimary={false}
               transform="capitalize"
             />
-          </label>
         )}
         <input
         
@@ -41,12 +40,12 @@ const Input = ({label,type,name,error,sizer="sm",className,register,disabled=fal
             generateSizeForInput(sizer),
             className
           )}
-          {...register}
           ref={refObj}
           disabled={disabled}
           type={iType}
           placeholder={placeholder}
           onChange={onChange}
+          {...register}
         />
         {name === 'search' && (
           <div className="absolute top-[20px] left-[15px] cursor-pointer">
@@ -64,9 +63,11 @@ const Input = ({label,type,name,error,sizer="sm",className,register,disabled=fal
             {iType === 'text' && <EyeCloseIcon />}
           </div>
         )}
-        {error && (
-          <span className="inline-block text-red-500 text-xs">{error}</span>
-        )}
+        {showError &&
+        <span className={`text-red-500  text-xs ${error ? "inline-block":"invisible"}`}>
+        {error ? error : "h"}
+      </span>
+        }
       </div>
     );
   }
