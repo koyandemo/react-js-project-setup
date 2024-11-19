@@ -253,14 +253,14 @@ const ProductListPage = () => {
           </div>
           <div className="w-[20%]">
             <Dropdown
-              value={filterData.orderBy}
+              value={filterData.categoryId}
               onChange={(e) =>
                 setFilterData({ ...filterData, categoryId: e.value })
               }
               options={categoriesData}
               optionLabel="name"
               optionValue="id"
-              placeholder="Select Order"
+              placeholder="Select Category"
               className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
             />
           </div>

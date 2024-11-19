@@ -1,6 +1,6 @@
-import { getSkus } from '@/@api/skuApi';
+import { getProducts } from '@/@api/productApi';
+import { deleteSku, getSkus } from '@/@api/skuApi';
 import ButtonCustom from '@/button/ButtonCustom';
-import DropDownDefault from '@/components/dropDown/DropDownDefault';
 import MainContainer from '@/components/MainContainer';
 import Text from '@/components/typography/Text';
 import {
@@ -11,48 +11,103 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ProductT } from '@/types/product';
 import { SkuFilterT, SkuT } from '@/types/sku';
-import { cn } from '@/utils';
+import getErrorMessage, { cn, toastMessage } from '@/utils';
 import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
+import { orderByLists } from '@/utils/initData';
 import { EditIcon } from 'lucide-react';
+import { Dropdown } from 'primereact/dropdown';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import { useNavigate } from 'react-router-dom';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
 const SkuListPage = () => {
-  const [total,setTotal] = useState(0);
+  const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState<number>(1);
+  const [isFetchAgain,setIsFetchAgain] = useState(false);
   const [loading, setLoading] = useState(false);
   const [skuData, setSkuData] = useState<SkuT[]>([]);
-  const [filterData] = useState<SkuFilterT>({
+  const [productsData, setProductsData] = useState<ProductT[]>([]);
+  const [filterData, setFilterData] = useState<SkuFilterT>({
     orderBy: 'desc',
     sortKey: 'created_at',
-    productId: 1,
+    productId: 0,
     limit: 10,
   });
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    fetchSkus();
+  }, [filterData.productId, filterData.orderBy]);
+
+  useEffect(() => {
+    fetchSkus();
+  },[isFetchAgain])
 
   const fetchProducts = async () => {
+    try {
+      const res = await getProducts(1, {
+        orderBy: 'asc',
+        sortKey: 'created_at',
+        categoryId: '',
+        name: '',
+        limit: 1000,
+      });
+      const data = res?.data?.data?.data;
+      if (data) {
+        setProductsData(data);
+        setFilterData({...filterData,productId : data[0].id})
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchSkus = async () => {
     try {
       setLoading(true);
       const res = await getSkus(1, filterData);
       const data = res?.data?.data;
       if (data) {
         setSkuData(data?.data);
-        setTotal(data.meta.total)
+        setTotal(data.meta.total);
+        fetchProducts();
         setTimeout(() => {
           setLoading(false);
-        }, 3000);
+        }, 1000);
       }
     } catch (err) {
       setLoading(false);
       console.error(err);
     }
   };
+
+  const handleReset = () => {
+    setFilterData({
+      orderBy: 'desc',
+      sortKey: 'created_at',
+      productId: 0,
+      limit: 10,
+    });
+  
+  };
+
+  const handleRemove = async (id:number) => {
+    const pass = confirm("Are you sure to delete !");
+    
+    if(pass){
+      try{
+      await deleteSku(id);
+      toastMessage("success","Successfully Deleted !")
+       setIsFetchAgain(true);
+      }catch(err){
+        toastMessage("error",getErrorMessage(err))
+      }
+    }
+  }
 
   const renderTableData = (idx: number, data: SkuT) => {
     return (
@@ -116,8 +171,16 @@ const SkuListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center gap-[8px]">
-            <EditIcon />
+            <div
+              onClick={() => {
+                navigate(`/sku/edit/${data.id}`);
+              }}
+            >
+              <EditIcon />
+            </div>
+            <div onClick={() => {handleRemove(data.id)}}>
             <RemoveIcon />
+            </div>
           </div>
         </TableCell>
       </TableRow>
@@ -133,32 +196,49 @@ const SkuListPage = () => {
             type="button"
             className="!rounded-[8px] px-[32px]"
             size="full"
-            callBack={() => {}}
+            callBack={() => {
+              navigate('/sku/create');
+            }}
           >
             <AddIcon />
             Add New Sku
           </ButtonCustom>
         </div>
-        <div className="w-full flex items-center gap-[0px]">
-          {/* <Input
-            name="search"
-            type="string"
-            sizer="full"
-            placeholder="Search Name,Email,etc..."
-            value=""
-            className="pl-[35px]"
-            onClick={(e) => {
-              console.log(e);
-            }}
-          /> */}
-          <DropDownDefault label="Product" size="lg" callBack={() => {}} />
-          <DropDownDefault label="Order By" size="lg" callBack={() => {}} />
+        <div className="w-full flex items-center gap-[24px]">
+          <div className="w-[20%]">
+            <Dropdown
+              value={filterData.productId}
+              onChange={(e) =>
+                setFilterData({ ...filterData, productId: e.value })
+              }
+              options={productsData}
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select Product"
+              className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
+            />
+          </div>
+          <div className="w-[20%]">
+            <Dropdown
+              value={filterData.orderBy}
+              onChange={(e) =>
+                setFilterData({ ...filterData, orderBy: e.value })
+              }
+              options={orderByLists}
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Order"
+              className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
+            />
+          </div>
           <ButtonCustom
             isOutline={true}
             type="button"
             className="!rounded-[8px]"
             size="md"
-            callBack={() => {}}
+            callBack={() => {
+              handleReset();
+            }}
           >
             Reset Filter
           </ButtonCustom>
@@ -212,23 +292,23 @@ const SkuListPage = () => {
             )}
           </Table>
         </div>
-        {skuData.length > 0 &&
-        <div className="w-full flex justify-center my-3">
-        <ReactPaginate
-          containerClassName={'pagination'}
-          pageClassName={'page-item'}
-          activeClassName={'active'}
-          forcePage={page - 1}
-          onPageChange={(event) => {
-            setPage(event.selected + 1);
-          }}
-          pageCount={total / 10}
-          breakLabel="..."
-          previousLabel={'<'}
-          nextLabel={'>'}
-        />
-      </div>
-        }
+        {skuData.length > 0 && (
+          <div className="w-full flex justify-center my-3">
+            <ReactPaginate
+              containerClassName={'pagination'}
+              pageClassName={'page-item'}
+              activeClassName={'active'}
+              forcePage={page - 1}
+              onPageChange={(event) => {
+                setPage(event.selected + 1);
+              }}
+              pageCount={total / 10}
+              breakLabel="..."
+              previousLabel={'<'}
+              nextLabel={'>'}
+            />
+          </div>
+        )}
       </div>
     </MainContainer>
   );

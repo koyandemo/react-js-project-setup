@@ -17,6 +17,11 @@ export const postProduct = async (data:FormData) => {
     return res;
 }
 
+export const editProduct = async (data:FormData) => {
+    const res = await apiConfig.post('/product-update',data);
+    return res;
+}
+
 export const deleteProduct = async (id:number) => {
     const res = await apiConfig.get(`/product-delete?id=${id}`);
     return res;

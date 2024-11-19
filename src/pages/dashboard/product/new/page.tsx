@@ -6,12 +6,12 @@ import Input from '@/components/input/Input';
 import TextArea from '@/components/input/TextArea';
 import MainContainer from '@/components/MainContainer';
 import MainContainerHeader from '@/components/MainContainerHeader';
-import Text from '@/components/typography/Text';
 import FileUpload from '@/components/upload/FileUpload';
+import FileUploadValContainer from '@/components/upload/FileUploadValContainer';
 import { CategoryT } from '@/types/category';
 import { ProductSchema } from '@/types/schema/productSchema';
 import getErrorMessage, { toastMessage } from '@/utils';
-import { imageBannerT, statusList } from '@/utils/initData';
+import { imageBannerData, imageBannerT, statusList } from '@/utils/initData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dropdown } from 'primereact/dropdown';
 import { useEffect, useState } from 'react';
@@ -23,11 +23,10 @@ const ProductCreatePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [categoriesData, setCategoriesData] = useState<CategoryT[]>([]);
-  const [bannerBlobUrl, setBannerBlobUrl] = useState<imageBannerT>({
-    value: null,
-    path: '',
-  });
-
+  const [bannerBlobUrl, setBannerBlobUrl] = useState<imageBannerT>(imageBannerData);
+  const [frontBlobUrl,setFrontBlobUrl] = useState<imageBannerT>(imageBannerData);
+  const [backBlobUrl,setBackBlobUrl] = useState<imageBannerT>(imageBannerData);
+  const [fullBlobUrl,setFullBlobUrl] = useState<imageBannerT>(imageBannerData);
 
   const {
     register,
@@ -41,7 +40,7 @@ const ProductCreatePage = () => {
 
   useEffect(() => {
     fetchCategoires();
-  },[])
+  }, []);
 
   const fetchCategoires = async () => {
     try {
@@ -62,24 +61,22 @@ const ProductCreatePage = () => {
   const handleProductCreate = async (value: z.infer<typeof ProductSchema>) => {
     try {
       setLoading(true);
-      // const data = {
-      //   ...value,
-      //   bannerImage:bannerBlobUrl.value,
-      //   fullImage:bannerBlobUrl.value
-      // }
-
-      // const res = await postProduct(data);
       const formData = new FormData();
-      formData.append("name",value.name);
-      formData.append("price",value.price.toString());
-      formData.append("categoryId",value.categoryId.toString())
-      formData.append("discountPrice",value.discountPrice ? value.discountPrice.toString() : '0')
-      formData.append("weight",value.weight.toString())
-      formData.append("description",value.description);
-      formData.append("customizeStatus",value.customizeStatus.toString())
-      formData.append("status",value.status.toString())
-      formData.append("bannerImage",value.bannerImage); 
-      formData.append("fullImage",value.bannerImage); 
+      formData.append('name', value.name);
+      formData.append('price', value.price.toString());
+      formData.append('categoryId', value.categoryId.toString());
+      formData.append(
+        'discountPrice',
+        value.discountPrice ? value.discountPrice.toString() : '0'
+      );
+      formData.append('weight', value.weight.toString());
+      formData.append('description', value.description);
+      formData.append('customizeStatus', value.customizeStatus.toString());
+      formData.append('status', value.status.toString());
+      formData.append('bannerImage', value.bannerImage!);
+      formData.append('frontImage', value.frontImage!);
+      formData.append('backImage', value.backImage!);
+      formData.append('fullImage', value.fullImage!);
       await postProduct(formData);
       setLoading(false);
       toastMessage('success', 'Successfully Created !');
@@ -105,14 +102,10 @@ const ProductCreatePage = () => {
           noValidate
           onSubmit={handleSubmit(handleProductCreate)}
         >
-          <div className="flex flex-col gap-[0.5em] w-full">
-            <Text
-              label={'Banner Image'}
-              size="sm"
-              weight="medium"
-              isPrimary={false}
-              transform="capitalize"
-            />
+          <FileUploadValContainer
+            label="Banner Image"
+            error={errors['bannerImage']?.message!}
+          >
             <Controller
               name="bannerImage"
               control={control}
@@ -131,16 +124,77 @@ const ProductCreatePage = () => {
                 />
               )}
             />
-            <span
-              className={`text-red-500  text-xs ${
-                errors['bannerImage']?.message ? 'inline-block' : 'invisible'
-              }`}
-            >
-              {errors['bannerImage']?.message
-                ? errors['bannerImage']?.message
-                : 'h'}
-            </span>
-          </div>
+          </FileUploadValContainer>
+          <FileUploadValContainer
+            label="Front Image"
+            error={errors['frontImage']?.message!}
+          >
+            <Controller
+              name="frontImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_front"
+                  type="banner"
+                  height={300}
+                  blobUrl={frontBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setFrontBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+          <FileUploadValContainer
+            label="Back Image"
+            error={errors['backImage']?.message!}
+          >
+            <Controller
+              name="backImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_back"
+                  type="banner"
+                  height={300}
+                  blobUrl={backBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setBackBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+          <FileUploadValContainer
+            label="Full Image"
+            error={errors['fullImage']?.message!}
+          >
+            <Controller
+              name="fullImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_full"
+                  type="banner"
+                  height={300}
+                  blobUrl={fullBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setFullBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+
           <div className="w-full flex items-center gap-[16px]">
             <Input
               type="string"
@@ -181,7 +235,10 @@ const ProductCreatePage = () => {
               name="price"
               label="Price"
               placeholder="Enter your Price"
-              register={register('price', { required: true,valueAsNumber:true })}
+              register={register('price', {
+                required: true,
+                valueAsNumber: true,
+              })}
               error={errors['price']?.message}
             />
             <Input
@@ -191,7 +248,10 @@ const ProductCreatePage = () => {
               name="discountPrice"
               label="Discount Price"
               placeholder="Enter your Discount Price"
-              register={register('discountPrice', { required: true,valueAsNumber:true })}
+              register={register('discountPrice', {
+                required: true,
+                valueAsNumber: true,
+              })}
               error={errors['discountPrice']?.message}
             />
           </div>
@@ -203,7 +263,10 @@ const ProductCreatePage = () => {
               name="weight"
               label="Weight"
               placeholder="Enter your Weight"
-              register={register('weight', { required: true,valueAsNumber:true })}
+              register={register('weight', {
+                required: true,
+                valueAsNumber: true,
+              })}
               error={errors['weight']?.message}
             />
           </div>
@@ -214,7 +277,7 @@ const ProductCreatePage = () => {
             >
               <Controller
                 name="customizeStatus"
-                control={control} 
+                control={control}
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
                     value={value}
@@ -262,7 +325,9 @@ const ProductCreatePage = () => {
               size="lg"
               disabled={loading}
               isOutline={true}
-              callBack={() => {navigate("/product")}}
+              callBack={() => {
+                navigate('/product');
+              }}
             >
               Cancel
             </ButtonCustom>

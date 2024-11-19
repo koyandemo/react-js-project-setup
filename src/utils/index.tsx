@@ -97,6 +97,9 @@ export const toastMessage = (
 
 export default function getErrorMessage(error: unknown) {
   if (axios.isAxiosError(error)) {
+    if(error.response?.data?.data){
+      return error.response?.data?.data
+    }
     // if (
     //   error.response?.data?.data &&
     //   Object.keys(error.response?.data?.data).length > 0

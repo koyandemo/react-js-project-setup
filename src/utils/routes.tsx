@@ -32,6 +32,11 @@ import ProductCreatePage from '@/pages/dashboard/product/new/page';
 import CategoryCreatePage from '@/pages/dashboard/category/new/page';
 import ProductEditPage from '@/pages/dashboard/product/edit/page';
 import CategoryEditPage from '@/pages/dashboard/category/edit/page';
+import SkuCreatePage from '@/pages/dashboard/sku/new/page';
+import SkuEditPage from '@/pages/dashboard/sku/edit/page';
+import VariationListPage from '@/pages/dashboard/variation';
+import VariationCreatePage from '@/pages/dashboard/variation/edit/page';
+import VariationEditPage from '@/pages/dashboard/variation/edit/page';
 
 export const menuItems = [
   {
@@ -93,6 +98,12 @@ export const menuItems = [
     label: 'Sku',
     route: '/sku',
     group: 'sku',
+  },
+  {
+    icon: <ProductIcon />,
+    label: 'Variation',
+    route: '/variation',
+    group: 'variation',
   },
   {
     icon: <OrderIcon />,
@@ -166,8 +177,28 @@ const dashboardRoutes = [
     element: <ProductEditPage />,
   },
   {
+    path: '/variation',
+    element: <VariationListPage />,
+  },
+  {
+    path: '/variation/create',
+    element: <VariationCreatePage />,
+  },
+  {
+    path: '/variation/edit/:id',
+    element: <VariationEditPage />,
+  },
+  {
     path: '/sku',
     element: <SkuListPage />,
+  },
+  {
+    path: '/sku/create',
+    element: <SkuCreatePage />,
+  },
+  {
+    path: '/sku/edit/:id',
+    element: <SkuEditPage />,
   },
   {
     path: '/order',

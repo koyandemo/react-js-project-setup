@@ -26,6 +26,10 @@ export type imageBannerT = {
   path: string;
 }
 
+export const imageBannerData = {
+  value:null,
+  path:""
+}
 
 
 

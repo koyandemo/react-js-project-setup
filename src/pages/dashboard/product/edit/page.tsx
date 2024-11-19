@@ -1,17 +1,17 @@
 import { getCategories } from '@/@api/categoryApi';
-import { getProduct, postProduct } from '@/@api/productApi';
+import { editProduct, getProduct } from '@/@api/productApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import DropDownContainer from '@/components/DropDownContainer';
 import Input from '@/components/input/Input';
 import TextArea from '@/components/input/TextArea';
 import MainContainer from '@/components/MainContainer';
 import MainContainerHeader from '@/components/MainContainerHeader';
-import Text from '@/components/typography/Text';
 import FileUpload from '@/components/upload/FileUpload';
+import FileUploadValContainer from '@/components/upload/FileUploadValContainer';
 import { CategoryT } from '@/types/category';
 import { ProductSchema } from '@/types/schema/productSchema';
 import getErrorMessage, { toastMessage } from '@/utils';
-import { imageBannerT, statusList } from '@/utils/initData';
+import { imageBannerData, imageBannerT, statusList } from '@/utils/initData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dropdown } from 'primereact/dropdown';
 import { useEffect, useState } from 'react';
@@ -24,10 +24,12 @@ const ProductEditPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [categoriesData, setCategoriesData] = useState<CategoryT[]>([]);
-  const [bannerBlobUrl, setBannerBlobUrl] = useState<imageBannerT>({
-    value: null,
-    path: '',
-  });
+  const [bannerBlobUrl, setBannerBlobUrl] =
+    useState<imageBannerT>(imageBannerData);
+  const [frontBlobUrl, setFrontBlobUrl] =
+    useState<imageBannerT>(imageBannerData);
+  const [backBlobUrl, setBackBlobUrl] = useState<imageBannerT>(imageBannerData);
+  const [fullBlobUrl, setFullBlobUrl] = useState<imageBannerT>(imageBannerData);
 
   const {
     register,
@@ -41,33 +43,38 @@ const ProductEditPage = () => {
   });
 
   useEffect(() => {
-    if(id){
-    fetchProduct(id);
+    if (id) {
+      fetchProduct(id);
     }
   }, [id]);
 
   const fetchProduct = async (id: string) => {
     try {
-        const dataFilter = {
-            type : "update",
-            id : id
-        }
+      const dataFilter = {
+        type: 'update',
+        id: id,
+      };
       const res = await getProduct(dataFilter);
       const data = res?.data?.data?.detail;
       console.log(data);
-      setValue("name",data.name);
-      setValue("categoryId",data.categoryId);
-      setValue("price",data.price);
-      setValue("discountPrice",data.discountPrice);
-      setValue("weight",data.weight);
-      setValue("customizeStatus",data.customizeStatus);
-      setValue("status",data.status);
-      setValue("description",data.description)  
-      setValue("bannerImage",data.bannerImage)
-      setBannerBlobUrl({...bannerBlobUrl,path:data.bannerImage})
+      setValue('name', data.name);
+      setValue('categoryId', data.categoryId);
+      setValue('price', data.price);
+      setValue('discountPrice', data.discountPrice);
+      setValue('weight', data.weight);
+      setValue('customizeStatus', data.customizeStatus);
+      setValue('status', data.status);
+      setValue('description', data.description);
+      setValue('bannerImage', data.bannerImage);
+      setValue("fullImage",data.fullImage);
+      setBannerBlobUrl({ ...bannerBlobUrl, path: data.bannerImage! });
+      setFrontBlobUrl({ ...frontBlobUrl, path: data.fontImage! });
+      setBackBlobUrl({ ...frontBlobUrl, path: data.backImage! });
+      setFullBlobUrl({ ...frontBlobUrl, path: data.fullImage! });
       fetchCategoires();
     } catch (err) {
       console.error(err);
+      toastMessage("error",getErrorMessage(err));
     }
   };
 
@@ -90,25 +97,37 @@ const ProductEditPage = () => {
   const handleProductEdit = async (value: z.infer<typeof ProductSchema>) => {
     try {
       setLoading(true);
-      
+
       const formData = new FormData();
+      formData.append("id",id!);
       formData.append('name', value.name);
       formData.append('price', value.price.toString());
       formData.append('categoryId', value.categoryId.toString());
-      formData.append('discountPrice', value?.discountPrice ? value?.discountPrice?.toString() : '0');
+      formData.append(
+        'discountPrice',
+        value?.discountPrice ? value?.discountPrice?.toString() : '0'
+      );
       formData.append('weight', value.weight.toString());
       formData.append('description', value.description);
       formData.append('customizeStatus', value.customizeStatus.toString());
       formData.append('status', value.status.toString());
-      formData.append('bannerImage', value.bannerImage);
-      formData.append('frontImage', value.bannerImage);
-      formData.append('fullImage', value.bannerImage);
-      console.log(value);
-      const res = await postProduct(formData);
+      if(bannerBlobUrl.value){
+        formData.append('bannerImage', value.bannerImage);
+      }
+      if(frontBlobUrl.value){
+        formData.append('frontImage', value.frontImage);
+      }
+      if(backBlobUrl.value){
+        formData.append('backImage', value.backImage);
+      }
+      if(fullBlobUrl.value){
+        formData.append('fullImage', value.fullImage);
+      }
+     
+      await editProduct(formData);
 
-      console.log(res);
       setLoading(false);
-      toastMessage('success', 'Successfully Created !');
+      toastMessage('success', 'Successfully Updated !');
       navigate('/product');
     } catch (err) {
       console.error(err);
@@ -131,7 +150,99 @@ const ProductEditPage = () => {
           noValidate
           onSubmit={handleSubmit(handleProductEdit)}
         >
-          <div className="flex flex-col gap-[0.5em] w-full">
+          <FileUploadValContainer
+            label="Banner Image"
+            error={errors['bannerImage']?.message!}
+          >
+            <Controller
+              name="bannerImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_banner"
+                  type="banner"
+                  height={300}
+                  blobUrl={bannerBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setBannerBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+          <FileUploadValContainer
+            label="Front Image"
+            error={errors['frontImage']?.message!}
+          >
+            <Controller
+              name="frontImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_front"
+                  type="banner"
+                  height={300}
+                  blobUrl={frontBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setFrontBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+          <FileUploadValContainer
+            label="Back Image"
+            error={errors['backImage']?.message!}
+          >
+            <Controller
+              name="backImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_back"
+                  type="banner"
+                  height={300}
+                  blobUrl={backBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setBackBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+          <FileUploadValContainer
+            label="Full Image"
+            error={errors['fullImage']?.message!}
+          >
+            <Controller
+              name="fullImage"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  idx="_product_full"
+                  type="banner"
+                  height={300}
+                  blobUrl={fullBlobUrl.path}
+                  setBlobUrl={(file, path) => {
+                    if (file) {
+                      onChange(file);
+                      setFullBlobUrl({ value: file, path });
+                    }
+                  }}
+                />
+              )}
+            />
+          </FileUploadValContainer>
+          {/* <div className="flex flex-col gap-[0.5em] w-full">
             <Text
               label={'Banner Image'}
               size="sm"
@@ -166,7 +277,7 @@ const ProductEditPage = () => {
                 ? errors['bannerImage']?.message
                 : 'h'}
             </span>
-          </div>
+          </div> */}
           <div className="w-full flex items-center gap-[16px]">
             <Input
               type="string"

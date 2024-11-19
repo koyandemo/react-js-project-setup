@@ -7,7 +7,7 @@ import Text from '@/components/typography/Text';
 import FileUpload from '@/components/upload/FileUpload';
 import { CategorySchema } from '@/types/schema/categorySchema';
 import getErrorMessage, { toastMessage } from '@/utils';
-import { imageBannerT } from '@/utils/initData';
+import { imageBannerData, imageBannerT } from '@/utils/initData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -61,7 +61,9 @@ const CategoryEditPage = () => {
       const formData = new FormData();
       formData.append('id', id || '');
       formData.append('name', value.name);
-      formData.append('image', value.image || "");
+      if(imageBannerData.value){
+      formData.append('image', value.image);
+      }
       await editCategory(formData);
       setLoading(false);
       toastMessage('success', 'Successfully Updated !');
