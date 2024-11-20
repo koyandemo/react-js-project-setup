@@ -1,5 +1,6 @@
 import { getProducts} from '@/@api/productApi';
 import { postSku } from '@/@api/skuApi';
+import { getVariations } from '@/@api/variationApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import DropDownContainer from '@/components/DropDownContainer';
 import Input from '@/components/input/Input';
@@ -10,6 +11,7 @@ import FileUpload from '@/components/upload/FileUpload';
 import FileUploadValContainer from '@/components/upload/FileUploadValContainer';
 import { ProductT } from '@/types/product';
 import { SkuSchema } from '@/types/schema/skuSchema';
+import { VariationT } from '@/types/variation';
 import getErrorMessage, { toastMessage } from '@/utils';
 import { imageBannerData, imageBannerT} from '@/utils/initData';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,6 +25,7 @@ const SkuCreatePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState<ProductT[]>([]);
+  const [variationData,setVariationData] = useState<VariationT[]>([]);
   const [image1BlobUrl, setImage1BlobUrl] =
     useState<imageBannerT>(imageBannerData);
   const [image2BlobUrl, setImage2BlobUrl] =
@@ -44,7 +47,24 @@ const SkuCreatePage = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchVariations();
   }, []);
+
+  const fetchVariations = async () => {
+    try {
+      const res = await getVariations(1, {
+        orderBy: 'desc',
+        sortKey: 'id',
+        limit: 100,
+      });
+      const data = res?.data?.data;
+      if (data) {
+       setVariationData(data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   
   const fetchProducts = async () => {
@@ -99,7 +119,7 @@ const SkuCreatePage = () => {
       className="flex flex-col justify-between"
     >
       <div>
-        <MainContainerHeader title="Product Create" />
+        <MainContainerHeader title="Sku Create" />
         <form
           className="flex flex-col gap-[24px] mt-[50px]"
           noValidate
@@ -221,7 +241,7 @@ const SkuCreatePage = () => {
                   <Dropdown
                     value={value}
                     onChange={(e) => onChange(e.value)}
-                    options={productsData}
+                    options={variationData}
                     optionLabel="name"
                     optionValue="id"
                     placeholder="Select Variation"

@@ -16,6 +16,11 @@ export const getSku = async (data: unknown) => {
   return res;
 };
 
+export const editSku = async (data:FormData) => {
+  const res = await apiConfig.post('/sku-update',data);
+  return res;
+}
+
 export const deleteSku = async (id: number) => {
   const res = await apiConfig.get(`/sku-delete?id=${id}`);
   return res;

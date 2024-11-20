@@ -1,5 +1,6 @@
 import { getProducts } from '@/@api/productApi';
-import { getSku, postSku } from '@/@api/skuApi';
+import { editSku, getSku} from '@/@api/skuApi';
+import { getVariations } from '@/@api/variationApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import DropDownContainer from '@/components/DropDownContainer';
 import Input from '@/components/input/Input';
@@ -10,6 +11,7 @@ import FileUpload from '@/components/upload/FileUpload';
 import FileUploadValContainer from '@/components/upload/FileUploadValContainer';
 import { ProductT } from '@/types/product';
 import { SkuSchema } from '@/types/schema/skuSchema';
+import { VariationT } from '@/types/variation';
 import getErrorMessage, { toastMessage } from '@/utils';
 import { imageBannerData, imageBannerT } from '@/utils/initData';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +26,7 @@ const SkuEditPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState<ProductT[]>([]);
+  const [variationData,setVariationData] = useState<VariationT[]>([]);
   const [image1BlobUrl, setImage1BlobUrl] =
     useState<imageBannerT>(imageBannerData);
   const [image2BlobUrl, setImage2BlobUrl] =
@@ -50,6 +53,7 @@ const SkuEditPage = () => {
     }
   }, [id]);
 
+
   const fetchSku = async (id: string) => {
     try {
       const res = await getSku({ id: +id, type: 'update' });
@@ -68,10 +72,28 @@ const SkuEditPage = () => {
       setImage3BlobUrl({ ...image1BlobUrl, path: data.image3 });
       setImage4BlobUrl({ ...image1BlobUrl, path: data.image4 });
       fetchProducts();
+      fetchVariations();
     } catch (err) {
       console.error(err);
     }
   };
+
+  const fetchVariations = async () => {
+    try {
+      const res = await getVariations(1, {
+        orderBy: 'desc',
+        sortKey: 'id',
+        limit: 100,
+      });
+      const data = res?.data?.data;
+      if (data) {
+       setVariationData(data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   const fetchProducts = async () => {
     try {
@@ -80,7 +102,7 @@ const SkuEditPage = () => {
         sortKey: 'created_at',
         categoryId: '',
         name: '',
-        limit: 10,
+        limit: 100,
       });
       const data = res?.data?.data;
       if (data) {
@@ -91,10 +113,11 @@ const SkuEditPage = () => {
     }
   };
 
-  const handleSkuCreate = async (value: z.infer<typeof SkuSchema>) => {
+  const handleSkuEdit = async (value: z.infer<typeof SkuSchema>) => {
     try {
       setLoading(true);
       const formData = new FormData();
+      formData.append("id",id || "");
       formData.append('skuCode', value.skuCode);
       formData.append('productId', value.productId.toString());
       formData.append('variationId', value.variationId.toString());
@@ -112,7 +135,7 @@ const SkuEditPage = () => {
         formData.append('image4', value.image4);
       }
       
-      await postSku(formData);
+      await editSku(formData);
       setLoading(false);
       toastMessage('success', 'Successfully Created !');
       navigate('/sku');
@@ -135,7 +158,7 @@ const SkuEditPage = () => {
         <form
           className="flex flex-col gap-[24px] mt-[50px]"
           noValidate
-          onSubmit={handleSubmit(handleSkuCreate)}
+          onSubmit={handleSubmit(handleSkuEdit)}
         >
           <FileUploadValContainer
             label="Image 1"
@@ -253,7 +276,7 @@ const SkuEditPage = () => {
                   <Dropdown
                     value={value}
                     onChange={(e) => onChange(e.value)}
-                    options={productsData}
+                    options={variationData}
                     optionLabel="name"
                     optionValue="id"
                     placeholder="Select Variation"

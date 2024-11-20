@@ -35,8 +35,8 @@ import CategoryEditPage from '@/pages/dashboard/category/edit/page';
 import SkuCreatePage from '@/pages/dashboard/sku/new/page';
 import SkuEditPage from '@/pages/dashboard/sku/edit/page';
 import VariationListPage from '@/pages/dashboard/variation';
-import VariationCreatePage from '@/pages/dashboard/variation/edit/page';
 import VariationEditPage from '@/pages/dashboard/variation/edit/page';
+import VariationCreatePage from '@/pages/dashboard/variation/new/page';
 
 export const menuItems = [
   {
