@@ -1,5 +1,4 @@
 import { deleteCategory, getCategories } from '@/@api/categoryApi';
-import ButtonCustom from '@/button/ButtonCustom';
 import MainContainer from '@/components/MainContainer';
 import Text from '@/components/typography/Text';
 import {
@@ -12,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import { CategoryFilterT, CategoryT } from '@/types/category';
 import getErrorMessage, { cn, toastMessage } from '@/utils';
-import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
+import { LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
 import { orderByLists } from '@/utils/initData';
 import { EditIcon } from 'lucide-react';
 import { Dropdown } from 'primereact/dropdown';
@@ -141,18 +140,6 @@ const CategoryListPage = () => {
             placeholder="Select Order"
             className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
           />
-          <ButtonCustom
-            isOutline={true}
-            type="button"
-            className="!rounded-[8px] px-[32px] whitespace-nowrap"
-            size="full"
-            callBack={() => {
-              navigate("/category/create")
-            }}
-          >
-            <AddIcon />
-            Add New Category
-          </ButtonCustom>
         </div>
         <div>
           <Table>

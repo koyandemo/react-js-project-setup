@@ -303,6 +303,7 @@ const ProductListPage = () => {
                 <TableHead className={`${tHeadCn}`}>Price</TableHead>
                 <TableHead className={`${tHeadCn}`}>Discount Price</TableHead>
                 <TableHead className={`${tHeadCn}`}>Date</TableHead>
+                <TableHead className={`${tHeadCn}`}>Action</TableHead>
               </TableRow>
             </TableHeader>
             {loading && (
