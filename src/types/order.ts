@@ -15,6 +15,26 @@ export type OrderFilterT = {
     orderNo:string;
 }
 
+export type OrderInfoT =  {
+    id:number;
+    name:string;
+    job:string;
+    image:string;
+    product:string;
+    quantity:number;
+    skuCode:number;
+    status:number;
+    url:string;
+    variation:string;
+    variationId:number;
+    activateStatus:boolean;
+    backImage:string;
+    frontImage:string;
+    customizeStatus:number;
+    date:string;
+    price:number;
+}
+
 export type OrderT = {
     id:number;
     orderNo:string;
@@ -27,10 +47,12 @@ export type OrderT = {
     postal_code:string;
     status:number;
     quantity:number;
+    orderInfo:OrderInfoT[];
     total_price:number;
     discountPrice:number;
     deliveryPrice:number;
     vat:number;
     orderDate:string;
-    date:string
+    date:string;
+    price:string;
 }

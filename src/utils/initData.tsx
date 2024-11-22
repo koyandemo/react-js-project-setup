@@ -1,4 +1,3 @@
-
 export const orderByLists = [
   {
     name: 'ASC',
@@ -10,26 +9,38 @@ export const orderByLists = [
   },
 ];
 
-export const statusList = [{
-  name:"Active",
-  value:1
-},
-{
-  name:"In Active",
-  value:0
-}
-]
+export const orderStatusLists = [
+  {
+    name: '1',
+    value: 1,
+  },
+  {
+    name: '2',
+    value: 2,
+  },
+  {
+    name: '3',
+    value: 3,
+  },
+];
 
+export const statusList = [
+  {
+    name: 'Active',
+    value: 1,
+  },
+  {
+    name: 'In Active',
+    value: 0,
+  },
+];
 
 export type imageBannerT = {
   value: File | null;
   path: string;
-}
+};
 
 export const imageBannerData = {
-  value:null,
-  path:""
-}
-
-
-
+  value: null,
+  path: '',
+};

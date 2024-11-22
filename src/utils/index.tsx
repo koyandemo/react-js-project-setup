@@ -2,6 +2,8 @@ import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { DateRange } from 'react-day-picker';
+import { format } from 'date-fns';
 
 export const passwordHint = '**********';
 
@@ -116,4 +118,41 @@ export default function getErrorMessage(error: unknown) {
     } else return error.message;
   } else if (error instanceof Error) return error.message;
   else return 'Unexpected error. Try again later';
+}
+
+
+export const generateValueHint = (value:string,length:number) => {
+  if(value.length < length){
+    return value;
+  }else{
+    return value.slice(0,length).concat("...")
+  }
+}
+
+
+export const generateEmailHint = (value:string) => {
+  const email = value.split('@')[0]
+  const domain = value.split('@')[1];
+
+  if(email.length < 5){
+    return email.concat(domain)
+  }else{
+    return email.slice(0,5).concat("...").concat('@').concat(domain);
+  }
+}
+
+
+
+export const generateFromToDate = (date:DateRange | undefined) => {
+  if(date?.from && date?.to){
+    return {
+      fromDate : format(date.from,"yyyy-MM-dd"), 
+      toDate: format(date.to,"yyyy-MM-dd")
+    }
+  }else{
+    return {
+      fromDate : '',
+      toDate : ''
+    }
+  }
 }

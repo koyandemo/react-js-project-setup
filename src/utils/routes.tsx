@@ -37,6 +37,7 @@ import SkuEditPage from '@/pages/dashboard/sku/edit/page';
 import VariationListPage from '@/pages/dashboard/variation';
 import VariationEditPage from '@/pages/dashboard/variation/edit/page';
 import VariationCreatePage from '@/pages/dashboard/variation/new/page';
+import OrderEditPage from '@/pages/dashboard/order/edit/page';
 
 export const menuItems = [
   {
@@ -203,6 +204,10 @@ const dashboardRoutes = [
   {
     path: '/order',
     element: <OrderListPage />,
+  },
+  {
+    path: '/order/edit/:id',
+    element: <OrderEditPage />,
   },
   {
     path: '/receive',

@@ -1,4 +1,3 @@
-import { deleteProduct} from '@/@api/productApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import { Dropdown } from 'primereact/dropdown';
 import Input from '@/components/input/Input';
@@ -12,15 +11,25 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import getErrorMessage, { cn, debounce, toastMessage } from '@/utils';
-import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
+import getErrorMessage, {
+  cn,
+  debounce,
+  generateEmailHint,
+  generateFromToDate,
+  generateValueHint,
+  toastMessage,
+} from '@/utils';
+import { LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
 import { EditIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { orderByLists } from '@/utils/initData';
+import { orderByLists, orderStatusLists } from '@/utils/initData';
 import { useNavigate } from 'react-router-dom';
 import { OrderFilterT, OrderT } from '@/types/order';
-import { getOrders } from '@/@api/orderApi';
+import { deleteOrder, getOrders} from '@/@api/orderApi';
+import { DateRange } from 'react-day-picker';
+import { DateRangePicker } from '@/components/date/DateRangePicker';
+
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
@@ -31,6 +40,7 @@ const OrderListPage = () => {
   const [loading, setLoading] = useState(false);
   const [isFetchAgain, setIsFetchAgain] = useState(false);
   const searchNameRef = useRef<HTMLInputElement | null>(null);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [ordersData, setOrdersData] = useState<OrderT[]>([]);
   const [filterData, setFilterData] = useState<OrderFilterT>({
     orderBy: 'desc',
@@ -48,19 +58,29 @@ const OrderListPage = () => {
   });
 
   useEffect(() => {
-    fetchProducts();
-  }, [page, filterData.name, filterData.orderBy]);
+    if (
+      (dateRange?.from && dateRange?.to) ||
+      (!dateRange?.from && !dateRange?.to)
+    ) {
+      fetchOrders();
+    }
+  }, [page, filterData.name, filterData.orderBy, filterData.status, dateRange]);
 
   useEffect(() => {
     if (isFetchAgain) {
-      fetchProducts();
+      fetchOrders();
     }
   }, [isFetchAgain]);
 
-  const fetchProducts = async () => {
+  const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await getOrders(page, filterData);
+
+      const dataFilter = {
+        ...filterData,
+        ...generateFromToDate(dateRange),
+      };
+      const res = await getOrders(page, dataFilter);
 
       const data = res?.data?.data;
       if (data) {
@@ -85,6 +105,11 @@ const OrderListPage = () => {
         name: searchNameRef?.current?.value || '',
       });
     }
+  };
+
+  const handleDateRange = (dateRange: DateRange | undefined) => {
+    setDateRange(dateRange);
+    setPage(1);
   };
 
   const handleReset = () => {
@@ -112,7 +137,7 @@ const OrderListPage = () => {
 
     if (pass) {
       try {
-        await deleteProduct(id);
+        await deleteOrder(id);
         toastMessage('success', 'Successfully Deleted !');
         setIsFetchAgain(true);
       } catch (err) {
@@ -121,6 +146,7 @@ const OrderListPage = () => {
     }
   };
 
+  
   const debounceSearch = debounce(handleSearchName, 1000);
 
   const renderTableData = (idx: number, data: OrderT) => {
@@ -141,7 +167,8 @@ const OrderListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <Text
-            label={data.name}
+            label={generateValueHint(data.name, 10)}
+            title={data.name}
             size="sm"
             weight="medium"
             className="text-[#475569]"
@@ -149,7 +176,8 @@ const OrderListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <Text
-            label={data.email}
+            label={generateEmailHint(data.email)}
+            title={data.email}
             size="sm"
             weight="medium"
             className="text-[#475569]"
@@ -157,7 +185,7 @@ const OrderListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <Text
-            label={data.phone}
+            label={data.phone || '-----'}
             size="sm"
             weight="medium"
             className="text-[#475569]"
@@ -165,7 +193,8 @@ const OrderListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <Text
-            label={data.address1}
+            label={generateValueHint(data.address1, 10)}
+            title={data.address1}
             size="sm"
             weight="medium"
             className="text-[#475569]"
@@ -214,9 +243,8 @@ const OrderListPage = () => {
         <TableCell className="font-medium">
           <div className="flex items-center gap-[8px]">
             <div
-              className="cursor-pointer"
               onClick={() => {
-                navigate(`/product/edit/${data.id}`);
+                navigate(`/order/edit/${data.id}`)
               }}
             >
               <EditIcon />
@@ -237,20 +265,6 @@ const OrderListPage = () => {
   return (
     <MainContainer background="#FFFFFF">
       <div className="w-full flex flex-col gap-[24px]">
-        <div className="self-end">
-          <ButtonCustom
-            isOutline={true}
-            type="button"
-            className="!rounded-[8px] px-[32px]"
-            size="full"
-            callBack={() => {
-              navigate('/product/create');
-            }}
-          >
-            <AddIcon />
-            Add New Product
-          </ButtonCustom>
-        </div>
         <div className="w-full flex items-center gap-[24px]">
           <div className="w-[20%]">
             <Input
@@ -266,16 +280,36 @@ const OrderListPage = () => {
             />
           </div>
           <div className="w-[20%]">
+            <DateRangePicker
+              dateRange={dateRange}
+              setDateRange={handleDateRange}
+            />
+          </div>
+          <div className="w-[20%]">
             <Dropdown
               value={filterData.orderBy}
               onChange={(e) => {
-                setFilterData({ ...filterData, orderBy: e.value })
-                setPage(1)
+                setFilterData({ ...filterData, orderBy: e.value });
+                setPage(1);
               }}
               options={orderByLists}
               optionLabel="name"
               optionValue="value"
               placeholder="Select Order"
+              className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
+            />
+          </div>
+          <div className="w-[20%]">
+            <Dropdown
+              value={filterData.status}
+              onChange={(e) => {
+                setFilterData({ ...filterData, status: e.value });
+                setPage(1);
+              }}
+              options={orderStatusLists}
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Status"
               className="!h-[50px] flex justify-center items-center px-[15px] w-full rounded-[8px] border border-[#B3B3B3] !outline-none"
             />
           </div>
@@ -312,7 +346,7 @@ const OrderListPage = () => {
             </TableHeader>
             {loading && (
               <TableRow className="relative h-[450px]">
-                <TableCell colSpan={8} className="pt-[50px] font-medium w-full">
+                <TableCell colSpan={11} className="pt-[50px] font-medium w-full">
                   <div className="absolute left-[50%] translate-x-[-50%] translate-y-[-100%]">
                     <LoadingIcon />
                   </div>
@@ -321,7 +355,7 @@ const OrderListPage = () => {
             )}
             {!loading && ordersData.length === 0 && (
               <TableRow className="bg-[#e8e6e646] h-[450px] border-b-[20px] border-[#f7f7f7]">
-                <TableCell colSpan={9} className="pt-5 text-center font-medium">
+                <TableCell colSpan={11} className="pt-5 text-center font-medium">
                   <span className="flex flex-col gap-3 justify-center items-center">
                     No More Data !
                     <NoMoreData width={30} height={30} />
