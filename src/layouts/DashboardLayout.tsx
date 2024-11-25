@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Header from '../components/header';
 import useDialogStore from '@/store/useDialogStore';
 import LogoutDialog from '@/components/dialog/LogoutDialog';
+import OrderStatusDialog from '@/components/dialog/OrderStatsuDialog';
+import GenerateQRDialog from '@/components/dialog/GenerateQRDialog';
 
 const DashboardLayout = () => {
   const {type} = useDialogStore();
@@ -20,6 +22,8 @@ const DashboardLayout = () => {
 
         <div className="flex h-screen overflow-hidden">
           {type === "logoutDialog" && <LogoutDialog />}
+          {type === "orderStatusDialog" && <OrderStatusDialog />}
+          {type === 'generateQrDialog' && <GenerateQRDialog />}
         </div>
       </div>
     </div>

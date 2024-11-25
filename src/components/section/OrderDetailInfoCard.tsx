@@ -9,9 +9,9 @@ type Props = {
 
 const OrderDetailInfoCard = ({label,children}:Props) => {
   return (
-    <div className="flex flex-col gap-[10px]">
-      <Text label={label} size="sm" weight="bold" />
-      <div className="flex flex-col gap-[5px]">
+    <div className="flex flex-col gap-[13px]">
+      <Text label={label} size="md" weight="bold" />
+      <div className="flex flex-col gap-[8px]">
         {children}
         {/* <Text label="Hello" size="sm" weight="medium" isGray={true} />
         <Text label="Manchester" size="sm" weight="medium" isGray={true} /> */}

@@ -156,3 +156,23 @@ export const generateFromToDate = (date:DateRange | undefined) => {
     }
   }
 }
+
+
+export const generateOrderStatusColor = (status:number) => {
+  switch(status){
+    case 0: return "bg-yellow-500"
+    case 1: return "bg-blue-500"
+    case 2: return "bg-green-500"
+    // case 3: return "bg-Failed-500"
+  }
+}
+
+export const generateOrderStatus = (status:number) => {
+  console.log(status);
+  switch(status){
+    case 0: return "Pending"
+    case 1: return "Shipping"
+    case 2: return "Complete"
+    // case 3: return "Failed"
+  }
+}

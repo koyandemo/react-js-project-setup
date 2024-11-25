@@ -38,6 +38,9 @@ import VariationListPage from '@/pages/dashboard/variation';
 import VariationEditPage from '@/pages/dashboard/variation/edit/page';
 import VariationCreatePage from '@/pages/dashboard/variation/new/page';
 import OrderEditPage from '@/pages/dashboard/order/edit/page';
+import IconListPage from '@/pages/dashboard/icon';
+import IconCreatePage from '@/pages/dashboard/icon/new/page';
+import IconEditPage from '@/pages/dashboard/icon/edit/page';
 
 export const menuItems = [
   {
@@ -58,12 +61,12 @@ export const menuItems = [
     route: '/users',
     group: 'user',
   },
-  {
-    icon: <ContentLibraryIcon />,
-    label: 'Content Library',
-    route: '/content-library',
-    group: 'content-library',
-  },
+  // {
+  //   icon: <ContentLibraryIcon />,
+  //   label: 'Content Library',
+  //   route: '/content-library',
+  //   group: 'content-library',
+  // },
   {
     icon: <SubscriptionIcon />,
     label: 'Subscription',
@@ -81,6 +84,12 @@ export const menuItems = [
     label: 'Agent',
     route: '/agent',
     group: 'agent',
+  },
+  {
+    icon: <ContentLibraryIcon />,
+    label: 'Icon',
+    route: '/icon',
+    group: 'icon',
   },
   {
     icon: <CategoryIcon />,
@@ -212,6 +221,18 @@ const dashboardRoutes = [
   {
     path: '/receive',
     element: <ReceiveListPage />,
+  },
+  {
+    path: '/icon',
+    element: <IconListPage />,
+  },
+  {
+    path: '/icon/create',
+    element: <IconCreatePage />,
+  },
+  {
+    path: '/icon/edit/:id',
+    element: <IconEditPage />,
   },
 ];
 

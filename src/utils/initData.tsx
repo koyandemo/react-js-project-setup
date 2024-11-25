@@ -11,16 +11,16 @@ export const orderByLists = [
 
 export const orderStatusLists = [
   {
-    name: '1',
+    name: 'Pending',
+    value: 0,
+  },
+  {
+    name: 'Shipping',
     value: 1,
   },
   {
-    name: '2',
+    name: 'Completed',
     value: 2,
-  },
-  {
-    name: '3',
-    value: 3,
   },
 ];
 

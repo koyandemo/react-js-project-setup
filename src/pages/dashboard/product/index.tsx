@@ -59,7 +59,6 @@ const ProductListPage = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      console.log(filterData.categoryId)
       const res = await getProducts(page, filterData);
       
       const data = res?.data?.data;

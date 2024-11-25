@@ -1,4 +1,5 @@
-import { deleteCategory, getCategories } from '@/@api/categoryApi';
+import { deleteCategory} from '@/@api/categoryApi';
+import { getIcons } from '@/@api/iconApi';
 import ButtonCustom from '@/button/ButtonCustom';
 import MainContainer from '@/components/MainContainer';
 import Text from '@/components/typography/Text';
@@ -10,7 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { CategoryFilterT, CategoryT } from '@/types/category';
+import { CategoryFilterT} from '@/types/category';
+import { IconT } from '@/types/icon';
 import getErrorMessage, { cn, toastMessage } from '@/utils';
 import { AddIcon, LoadingIcon, NoMoreData, RemoveIcon } from '@/utils/appIcon';
 import { orderByLists } from '@/utils/initData';
@@ -22,48 +24,49 @@ import { useNavigate } from 'react-router-dom';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
-const CategoryListPage = () => {
+const IconListPage = () => {
   const navigate = useNavigate();
   const [isFetchAgain,setIsFetchAgain] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [categoriesData, setCategoriesData] = useState<CategoryT[]>([]);
+  const [iconsData,setIconsData] = useState<IconT[]>([]);
   const [filterData, setFilterData] = useState<CategoryFilterT>({
     orderBy: 'desc',
     sortKey: 'created_at',
     limit: 10,
   });
-  // const [dateRange, setDateRange] = useState<DateRange | undefined>();
-
+ 
   useEffect(() => {
-    fetchCategoires();
+    fetchIcons();
   }, [page,filterData.orderBy]);
 
   useEffect(() => {
     if(isFetchAgain){
-      fetchCategoires();
+      fetchIcons();
     }
   },[isFetchAgain])
 
-  const fetchCategoires = async () => {
-    try {
+  const fetchIcons = async () => {
+    try{
       setLoading(true);
-      const res = await getCategories(page, filterData);
+      const res = await getIcons(page,filterData);
       const data = res?.data?.data;
-      if (data) {
-        setCategoriesData(data.data);
+      if(data){
         setTotal(data.meta.total);
+        setIconsData(data?.data)
         setTimeout(() => {
           setLoading(false);
           setIsFetchAgain(false);
         }, 1000);
       }
-    } catch (err) {
+      
+    }catch(err){
       setLoading(false);
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
+
 
   const handleRemove = async (id:number) => {
     const pass = confirm("Are you sure to delete !");
@@ -79,7 +82,7 @@ const CategoryListPage = () => {
     }
   }
 
-  const renderTableData = (idx: number, data: CategoryT) => {
+  const renderTableData = (idx: number, data: IconT) => {
     return (
       <TableRow
         className={cn(
@@ -116,7 +119,7 @@ const CategoryListPage = () => {
         </TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center gap-[8px]">
-            <div onClick={() => {navigate(`/category/edit/${data.id}`)}}>
+            <div onClick={() => {navigate(`/icon/edit/${data.id}`)}}>
             <EditIcon />
             </div>
             <div onClick={() =>  {handleRemove(data.id)}}>
@@ -147,11 +150,11 @@ const CategoryListPage = () => {
             className="!rounded-[8px] px-[32px] !whitespace-nowrap"
             size="full"
             callBack={() => {
-              navigate("/category/create")
+              navigate("/icon/create")
             }}
           >
             <AddIcon />
-            Add Category
+            Add Icon
           </ButtonCustom>
         </div>
         <div>
@@ -174,7 +177,7 @@ const CategoryListPage = () => {
                 </TableCell>
               </TableRow>
             )}
-            {!loading && categoriesData.length === 0 && (
+            {!loading && iconsData.length === 0 && (
               <TableRow className="bg-[#e8e6e646] h-[450px] border-b-[20px] border-[#f7f7f7]">
                 <TableCell colSpan={9} className="pt-5 text-center font-medium">
                   <span className="flex flex-col gap-3 justify-center items-center">
@@ -185,16 +188,16 @@ const CategoryListPage = () => {
               </TableRow>
             )}
 
-            {!loading && categoriesData.length > 0 && (
+            {!loading && iconsData.length > 0 && (
               <TableBody className="w-[inherit]">
-                {categoriesData?.map((contact, i) =>
+                {iconsData?.map((contact, i) =>
                   renderTableData(i, contact)
                 )}
               </TableBody>
             )}
           </Table>
         </div>
-        {categoriesData.length > 0 && (
+        {iconsData.length > 0 && (
           <div className="w-full flex justify-center my-3">
             <ReactPaginate
               containerClassName={'pagination'}
@@ -216,4 +219,4 @@ const CategoryListPage = () => {
   );
 };
 
-export default CategoryListPage;
+export default IconListPage;

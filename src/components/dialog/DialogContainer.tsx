@@ -33,7 +33,7 @@ export default function DialogContainer({
   const { closeDialog } = useDialogStore();
 
   return (
-    <div className="fixed flex justify-center items-center overflow-y-scroll inset-0 z-[9999] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+    <div className="fixed flex justify-center items-center overflow-y-scroll inset-0 z-[999] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
       <motion.div
         variants={variants}
         animate={'visible'}
