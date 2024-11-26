@@ -1,11 +1,11 @@
 'use client';
 
-import { Link} from "react-router-dom";
-import ClickOutSide from "../ClickOutSide";
-import { menuItems } from "../../utils/routes";
-import SidebarItem from "./SidebarItem";
-import { useState } from "react";
-import SidebarLogoutItem from "./SidebarLogoutItem";
+import { Link } from 'react-router-dom';
+import ClickOutSide from '../ClickOutSide';
+import { menuItems } from '../../utils/routes';
+import SidebarItem from './SidebarItem';
+import { useState } from 'react';
+import SidebarLogoutItem from './SidebarLogoutItem';
 
 
 interface SidebarProps {
@@ -14,24 +14,19 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const [pageName,setPageName] = useState("");
-  
+  const [pageName, setPageName] = useState('');
+
   return (
     <ClickOutSide onClick={() => setSidebarOpen(false)}>
       <aside
         className={`absolute left-0 top-0 z-[9999] flex h-[99%] rounded-[30px] w-[200px] flex-col 
-        justify-between overflow-y-hidden bg-[#FFFFFFCC] backdrop-blur-[8px] duration-300 ease-linear ml-[10px] dark:bg-boxdark lg:static lg:translate-x-0 px-4 
+        justify-between overflow-y-scroll bg-[#FFFFFFCC] shreScrollBar backdrop-blur-[8px] duration-300 ease-linear ml-[10px] dark:bg-boxdark lg:static lg:translate-x-0 px-4 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex flex-col gap-10 pt-[24px]">
           <div className="flex items-center justify-center gap-2 px-6 py-[24px]">
             <Link to="/">
-              <img
-                width={105}
-                height={40}
-                src={'/logo-shre.svg'}
-                alt="Logo"
-              />
+              <img width={105} height={40} src={'/logo-shre.svg'} alt="Logo" />
             </Link>
 
             <button
@@ -54,23 +49,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </svg>
             </button>
           </div>
-          <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-            <nav>
-                  <ul className="mb-6 flex flex-col gap-2">
-                    {menuItems.map((menuItem, menuIndex) => (
-                      <SidebarItem
-                        key={menuIndex}
-                        item={menuItem}
-                        pageName={pageName}
-                        setPageName={setPageName}
-                      />
-                    ))}
-                  </ul>
-            </nav>
-          </div>
-        </div>
-        <div>
-        <SidebarLogoutItem />
+          <nav className="flex flex-col overflow-y-hidden duration-300 ease-linear">
+            <ul className="mb-6 flex flex-col gap-2">
+              {menuItems.map((menuItem, menuIndex) => (
+                <SidebarItem
+                  key={menuIndex}
+                  item={menuItem}
+                  pageName={pageName}
+                  setPageName={setPageName}
+                />
+              ))}
+              <SidebarLogoutItem />
+            </ul>
+          </nav>
         </div>
       </aside>
     </ClickOutSide>

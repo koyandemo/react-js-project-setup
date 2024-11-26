@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Input from '../input/Input';
@@ -11,8 +11,21 @@ import { login } from '@/@api/authApi';
 
 const SignInFrame = () => {
   const navigate = useNavigate();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event:any) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //   };
+
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [v]);
 
   const {
     register,
@@ -26,17 +39,19 @@ const SignInFrame = () => {
     },
   });
 
-  const handleLogin = async (value: z.infer<typeof SignInSchema>) => {
+  const handleLogin = async (
+    value: z.infer<typeof SignInSchema>
+  ) => {
     try {
       setLoading(true);
       const res = await login(value);
       const token = res?.data?.data?.token;
-      if(res?.data?.data?.token){
+      if (res?.data?.data?.token) {
         setLoading(false);
-        localStorage.setItem("token",token)
-        navigate("/")
+        localStorage.setItem('token', token);
+        navigate('/');
       }
-      } catch (err) {
+    } catch (err) {
       setLoading(false);
       setErrorMessage('Incorrect email or password.');
       setTimeout(() => {
@@ -47,14 +62,14 @@ const SignInFrame = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleLogin)}>
+    <form noValidate  onSubmit={handleSubmit(handleLogin)}>
       <div className="mt-4 w-full">
         <Input
           id="email"
           name="email"
           type="email"
           label="Email"
-          sizer='full'
+          sizer="full"
           placeholder="Email"
           register={register('email', { required: true })}
           error={errors['email']?.message}
@@ -71,22 +86,20 @@ const SignInFrame = () => {
           register={register('password', { required: true })}
           error={errors['password']?.message}
         />
-        {/* <a
-          target="_blank"
-          href="https://myshre.com/auth/forgot-password"
-          className="text-xs text-gray-500 hover:text-gray-900 text-end w-full mt-2"
-        >
-          Forget Password?
-        </a> */}
       </div>
       {errorMessage && (
-        <span className="inline-block text-red-500 text-xs">{errorMessage}</span>
+        <span className="inline-block text-red-500 text-xs">
+          {errorMessage}
+        </span>
       )}
-      <div className="mt-8  flex flex-col w-full">
-        <ButtonCustom disabled={loading} type="submit" size="full" className='text-white'>
-          {loading ? "Loading ...":"Login"}
+        <ButtonCustom
+          disabled={loading}
+          type="submit"
+          size="full"
+          className="text-white mt-8"
+        >
+          {loading ? 'Loading ...' : 'Login'}
         </ButtonCustom>
-      </div>
     </form>
   );
 };
