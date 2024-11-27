@@ -18,6 +18,6 @@ export const updateOrder = async (data:unknown) => {
 }
 
 export const deleteOrder = async (id:number) => {
-    const res = await apiConfig.get(`/delete-delete?id=${id}`);
+    const res = await apiConfig.get(`/order-delete?id=${id}`);
     return res;
 }

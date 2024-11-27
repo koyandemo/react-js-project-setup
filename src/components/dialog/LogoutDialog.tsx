@@ -25,6 +25,7 @@ const LogoutDialog = () => {
             size="full"
             className="text-white"
             callBack={() => {
+              localStorage.removeItem("token");
               window.location.assign("/sign-in")
             }}
           >

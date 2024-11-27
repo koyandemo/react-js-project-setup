@@ -26,10 +26,11 @@ import ReactPaginate from 'react-paginate';
 import { orderByLists, orderStatusLists } from '@/utils/initData';
 import { useNavigate } from 'react-router-dom';
 import { OrderFilterT, OrderT } from '@/types/order';
-import { deleteOrder, getOrders} from '@/@api/orderApi';
+import { deleteOrder, getOrders } from '@/@api/orderApi';
 import { DateRange } from 'react-day-picker';
 import { DateRangePicker } from '@/components/date/DateRangePicker';
-
+import DeleteDialog from '@/components/dialog/DeleteDialog';
+import { DeleteDialogT, initDeleteDialog } from '@/types/deleteDialog';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
@@ -56,6 +57,9 @@ const OrderListPage = () => {
     userId: '',
     orderNo: '',
   });
+
+  const [deleteDialog, setIsDeleteDialog] =
+    useState<DeleteDialogT>(initDeleteDialog);
 
   useEffect(() => {
     if (
@@ -133,20 +137,30 @@ const OrderListPage = () => {
   };
 
   const handleRemove = async (id: number) => {
-    const pass = confirm('Are you sure to delete !');
-
-    if (pass) {
-      try {
-        await deleteOrder(id);
-        toastMessage('success', 'Successfully Deleted !');
-        setIsFetchAgain(true);
-      } catch (err) {
-        toastMessage('error', getErrorMessage(err));
-      }
+    try {
+      setIsDeleteDialog({...deleteDialog,loading:true})
+      await deleteOrder(id);
+      toastMessage('success', 'Successfully Deleted !');
+      setIsDeleteDialog({...deleteDialog,show:false,loading:false})
+      setIsFetchAgain(true);
+    } catch (err) {
+      setIsDeleteDialog({...deleteDialog,show:false,loading:false})
+      toastMessage('error', getErrorMessage(err));
     }
+
+    // const pass = confirm('Are you sure to delete !');
+
+    // if (pass) {
+    //   try {
+    //     await deleteOrder(id);
+    //     toastMessage('success', 'Successfully Deleted !');
+    //     setIsFetchAgain(true);
+    //   } catch (err) {
+    //     toastMessage('error', getErrorMessage(err));
+    //   }
+    // }
   };
 
-  
   const debounceSearch = debounce(handleSearchName, 1000);
 
   const renderTableData = (idx: number, data: OrderT) => {
@@ -244,14 +258,19 @@ const OrderListPage = () => {
           <div className="flex items-center gap-[8px]">
             <div
               onClick={() => {
-                navigate(`/order/edit/${data.id}`)
+                navigate(`/order/edit/${data.id}`);
               }}
             >
               <EditIcon />
             </div>
             <div
               onClick={() => {
-                handleRemove(data.id);
+                setIsDeleteDialog({
+                  ...deleteDialog,
+                  show: true,
+                  id: data.id,
+                });
+                // handleRemove(data.id);
               }}
             >
               <RemoveIcon />
@@ -264,6 +283,15 @@ const OrderListPage = () => {
 
   return (
     <MainContainer background="#FFFFFF">
+      {deleteDialog.show && (
+        <DeleteDialog
+          deleteDialog={deleteDialog}
+          setDeleteDialog={setIsDeleteDialog}
+          callBack={() => {
+            handleRemove(deleteDialog.id);
+          }}
+        />
+      )}
       <div className="w-full flex flex-col gap-[24px]">
         <div className="w-full flex items-center gap-[24px]">
           <div className="w-[20%]">
@@ -346,7 +374,10 @@ const OrderListPage = () => {
             </TableHeader>
             {loading && (
               <TableRow className="relative h-[450px]">
-                <TableCell colSpan={11} className="pt-[50px] font-medium w-full">
+                <TableCell
+                  colSpan={11}
+                  className="pt-[50px] font-medium w-full"
+                >
                   <div className="absolute left-[50%] translate-x-[-50%] translate-y-[-100%]">
                     <LoadingIcon />
                   </div>
@@ -355,7 +386,10 @@ const OrderListPage = () => {
             )}
             {!loading && ordersData.length === 0 && (
               <TableRow className="bg-[#e8e6e646] h-[450px] border-b-[20px] border-[#f7f7f7]">
-                <TableCell colSpan={11} className="pt-5 text-center font-medium">
+                <TableCell
+                  colSpan={11}
+                  className="pt-5 text-center font-medium"
+                >
                   <span className="flex flex-col gap-3 justify-center items-center">
                     No More Data !
                     <NoMoreData width={30} height={30} />

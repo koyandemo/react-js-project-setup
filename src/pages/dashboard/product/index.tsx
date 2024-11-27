@@ -22,6 +22,8 @@ import { orderByLists } from '@/utils/initData';
 import { CategoryT } from '@/types/category';
 import { getCategories } from '@/@api/categoryApi';
 import { useNavigate } from 'react-router-dom';
+import { DeleteDialogT, initDeleteDialog } from '@/types/deleteDialog';
+import DeleteDialog from '@/components/dialog/DeleteDialog';
 
 const tHeadCn = 'text-[#202224] text-[14px] font-bold';
 
@@ -41,6 +43,9 @@ const ProductListPage = () => {
     name: '',
     limit: 10,
   });
+
+  const [deleteDialog, setIsDeleteDialog] =
+    useState<DeleteDialogT>(initDeleteDialog);
 
   useEffect(() => {
     fetchCategoires();
@@ -117,20 +122,32 @@ const ProductListPage = () => {
     }
   };
 
-  const handleRemove = async (id:number) => {
-    const pass = confirm("Are you sure to delete !");
+  // const handleRemove = async (id:number) => {
+  //   const pass = confirm("Are you sure to delete !");
     
-    if(pass){
-      try{
+  //   if(pass){
+  //     try{
+  //     await deleteProduct(id);
+  //     toastMessage("success","Successfully Deleted !")
+  //      setIsFetchAgain(true);
+  //     }catch(err){
+  //       toastMessage("error",getErrorMessage(err))
+  //     }
+  //   }
+  // }
+
+  const handleRemove = async (id: number) => {
+    try {
+      setIsDeleteDialog({...deleteDialog,loading:true})
       await deleteProduct(id);
-      toastMessage("success","Successfully Deleted !")
-       setIsFetchAgain(true);
-      }catch(err){
-        toastMessage("error",getErrorMessage(err))
-      }
+      toastMessage('success', 'Successfully Deleted !');
+      setIsDeleteDialog({...deleteDialog,show:false,loading:false})
+      setIsFetchAgain(true);
+    } catch (err) {
+      setIsDeleteDialog({...deleteDialog,show:false,loading:false})
+      toastMessage('error', getErrorMessage(err));
     }
   }
-
   
   
 
@@ -210,7 +227,13 @@ const ProductListPage = () => {
             }}>
             <EditIcon />
             </div>
-           <div onClick={() => {handleRemove(data.id)}}>
+           <div onClick={() => {
+             setIsDeleteDialog({
+              ...deleteDialog,
+              show: true,
+              id: data.id,
+            });
+           }}>
            <RemoveIcon />
            </div>
           </div>
@@ -221,6 +244,15 @@ const ProductListPage = () => {
 
   return (
     <MainContainer background="#FFFFFF">
+       {deleteDialog.show && (
+        <DeleteDialog
+          deleteDialog={deleteDialog}
+          setDeleteDialog={setIsDeleteDialog}
+          callBack={() => {
+            handleRemove(deleteDialog.id);
+          }}
+        />
+      )}
       <div className="w-full flex flex-col gap-[24px]">
         <div className="self-end">
           <ButtonCustom
